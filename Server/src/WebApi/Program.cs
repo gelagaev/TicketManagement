@@ -1,15 +1,32 @@
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Core;
+using Core.Configurations;
+using Core.UserAggregate;
+using FastEndpoints;
+using FastEndpoints.ApiExplorer;
 using Infrastructure;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+
+const string appTitle = "Tickets Management Web API V1";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Services.AddIdentity<User, Role>()
+  .AddEntityFrameworkStores<AppDbContext>()
+  .AddRoleManager<RoleManager<Role>>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext(connectionString!);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddFastEndpoints();
+builder.Services.AddFastEndpointsApiExplorer();
+builder.Services.ConfigureSwagger(appTitle);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -20,11 +37,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+  app.UseAppSwagger(appTitle);
 }
 
 app.UseHttpsRedirection();
