@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  database:
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      SA_PASSWORD: "Qwertyu7!"
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    ports:
+      - "1433:1433"
+    volumes:
+      - type: volume
+        source: data
+        target: /var/opt/mssql
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: "azurite"
+    hostname: azurite
+    restart: always
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - ./Blob/:/opt/azurite/folder
+
+volumes:
+  data:
