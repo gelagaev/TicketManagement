@@ -26,6 +26,8 @@ builder.Services.AddDbContext(connectionString!);
 builder.Services.AddControllers();
 builder.Services.AddFastEndpoints();
 builder.Services.AddFastEndpointsApiExplorer();
+
+builder.ConfigureBearerAuth();
 builder.Services.ConfigureSwagger(appTitle);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
