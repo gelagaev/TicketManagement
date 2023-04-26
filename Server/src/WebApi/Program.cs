@@ -8,6 +8,8 @@ using FastEndpoints.ApiExplorer;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WebApi;
 
 const string appTitle = "Tickets Management Web API V1";
 
@@ -49,5 +51,23 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+  var services = scope.ServiceProvider;
+
+  try
+  {
+    var context = services.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    SeedData.Initialize(services);
+  }
+  catch (Exception ex)
+  {
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred seeding the DB. {ExceptionMessage}", ex.Message);
+  }
+}
 
 app.Run();
