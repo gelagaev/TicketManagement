@@ -44,7 +44,6 @@ internal sealed class UserService : IUserService
   /// <returns></returns>
   public Task<User> FindByNameAsync(string userName)
   {
-    //TODO null
     return _userManager.FindByNameAsync(userName);
   }
 
@@ -56,11 +55,6 @@ internal sealed class UserService : IUserService
   public async Task<string?> GetAuthTokenOnUserLogin(LoginRequest request)
   {
     var user = await FindByNameAsync(request.Login);
-    //TODO
-    // if (user == null)
-    // {
-    //   return null;
-    // }
 
     var valid = await CheckPasswordAsync(user, request.Password);
 
@@ -74,14 +68,11 @@ internal sealed class UserService : IUserService
   /// <returns></returns>
   public async Task<RegisterResponse> RegisterUser(RegisterRequest request)
   {
-    // var clientRole = _roleManager.Roles.FirstAsync(role => role.Name == Roles.Client.ToString());
     var user = new User
     {
-      Id = Guid.NewGuid(),
       IsActive = true,
       Email = request.Email,
       UserName = request.Email,
-      // Roles = new List<UserRole> { new() { RoleId = (await clientRole).Id, UserId = userId, } }
     };
 
     var result = await _userManager.CreateAsync(user, request.Password);
