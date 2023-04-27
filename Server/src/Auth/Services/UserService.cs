@@ -25,6 +25,6 @@ internal sealed class UserService : IUserService
     var result = await _userManager.CreateAsync(user, request.Password);
     await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
 
-    return new RegisterResponse { Success = result.Succeeded, Errors = result.Errors.Any() ? result.Errors : null };
+    return new RegisterResponse { Errors = result.Errors.Any() ? result.Errors : null };
   }
 }

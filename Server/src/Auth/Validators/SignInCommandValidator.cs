@@ -1,4 +1,4 @@
-﻿using Auth.Endpoints.SingIn;
+﻿using Auth.Endpoints.SignIn;
 using FluentValidation;
 
 namespace Auth.Validators;

@@ -1,7 +1,6 @@
-﻿namespace Auth.Interfaces
+﻿namespace Auth.Interfaces;
+
+internal interface IEmailIsTakenProvider
 {
-    internal interface IEmailIsTakenProvider
-    {
-        Task<bool> IsTakenAsync(string email);
-    }
+  Task<bool> IsTakenAsync(string email);
 }

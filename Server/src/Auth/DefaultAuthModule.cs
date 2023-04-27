@@ -2,7 +2,6 @@
 using Auth.Interfaces;
 using Auth.Middleware;
 using Auth.Services;
-using Auth.Services.EmailIsTaken;
 using Autofac;
 
 namespace Auth;

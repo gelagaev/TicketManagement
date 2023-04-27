@@ -12,10 +12,7 @@ public class Register : EndpointBaseAsync
 {
   private readonly IMediator _mediator;
 
-  public Register(IMediator mediator)
-  {
-    _mediator = mediator;
-  }
+  public Register(IMediator mediator) =>_mediator = mediator;
 
   [HttpPost(RegisterRequest.Route)]
   [SwaggerOperation(

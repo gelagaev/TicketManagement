@@ -1,6 +1,4 @@
 ﻿using Auth.Endpoints.Register;
-using Auth.Endpoints.SingIn;
-using Core.UserAggregate;
 
 namespace Auth.Interfaces;
 

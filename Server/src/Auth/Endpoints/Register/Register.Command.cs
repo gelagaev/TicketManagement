@@ -1,7 +1,9 @@
 ﻿using MediatR;
 
 namespace Auth.Endpoints.Register;
-
+/// <summary>
+/// Register command
+/// </summary>
 internal sealed class RegisterCommand : IRequest<RegisterResponse>
 {
   public string Email { get; init; } = string.Empty;
