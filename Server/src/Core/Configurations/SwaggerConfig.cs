@@ -1,4 +1,3 @@
-using FastEndpoints.Swagger.Swashbuckle;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +32,6 @@ public static class SwaggerConfig
     {
       c.SwaggerDoc("v1", new OpenApiInfo { Title = title, Version = "v1" });
       c.EnableAnnotations();
-      c.OperationFilter<FastEndpointsOperationFilter>();
       var jwtSecurityScheme = new OpenApiSecurityScheme
       {
         BearerFormat = "JWT",

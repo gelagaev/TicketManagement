@@ -3,8 +3,6 @@ using Autofac.Extensions.DependencyInjection;
 using Core;
 using Core.Configurations;
 using Core.UserAggregate;
-using FastEndpoints;
-using FastEndpoints.ApiExplorer;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -26,8 +24,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext(connectionString!);
 
 builder.Services.AddControllers();
-builder.Services.AddFastEndpoints();
-builder.Services.AddFastEndpointsApiExplorer();
 
 builder.ConfigureBearerAuth();
 builder.Services.ConfigureSwagger(appTitle);

@@ -1,13 +1,15 @@
+using System.Reflection;
 using Auth;
+using Auth.Middleware;
 using Auth.Validators;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.Configurations;
 using Core.UserAggregate;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Data;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,8 +35,9 @@ builder.Services.AddIdentity<User, Role>(cfg =>
   .AddUserManager<UserManager<User>>()
   .AddRoleManager<RoleManager<Role>>();
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 builder.Services.AddControllers();
-builder.Services.AddFluentValidationAutoValidation();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -44,7 +47,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddValidatorsFromAssemblyContaining<AuthRequestValidator>(includeInternalTypes: true);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+builder.Services.AddValidatorsFromAssemblyContaining<SignInCommandValidator>(includeInternalTypes: true);
+
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultAuthModule());
@@ -63,6 +68,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 

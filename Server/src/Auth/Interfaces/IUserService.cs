@@ -1,13 +1,18 @@
-﻿using Auth.DTO;
+﻿using Auth.Endpoints.Register;
+using Auth.Endpoints.SingIn;
 using Core.UserAggregate;
 
 namespace Auth.Interfaces;
 
-public interface IUserService
+/// <summary>
+/// User manipulating service
+/// </summary>
+internal interface IUserService
 {
-  Task<bool> CheckPasswordAsync(User userName, string password);
-  Task<User> FindByNameAsync(string userName);
-  Task<string?> GetAuthTokenOnUserLogin(LoginRequest request);
-  Task<RegisterResponse> RegisterUser(RegisterRequest request);
-  Task AddAdminRole(User user);
+  /// <summary>
+  /// Registers user
+  /// </summary>
+  /// <param name="request">Register command</param>
+  /// <returns>Register Response<see cref="RegisterResponse"/></returns>
+  Task<RegisterResponse> RegisterUserAsync(RegisterCommand request);
 }

@@ -9,9 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Auth.Services;
 
-/// <summary>
-/// Jwt token service
-/// </summary>
+/// <inheritdoc />
 internal sealed class TokenService : ITokenService
 {
   private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
@@ -23,11 +21,7 @@ internal sealed class TokenService : ITokenService
     _options = options.Value;
   }
 
-  /// <summary>
-  /// Generates Jwt token for user
-  /// </summary>
-  /// <param name="user">User</param>
-  /// <returns></returns>
+  /// <inheritdoc />
   public string GetAuthToken(User user)
   {
     var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id.ToString()) };

@@ -13,6 +13,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Ardalis.ApiEndpoints" />
   </ItemGroup>
 
   <ItemGroup>
