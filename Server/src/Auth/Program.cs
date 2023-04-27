@@ -1,6 +1,7 @@
 using System.Reflection;
 using Auth;
 using Auth.Middleware;
+using Auth.Options;
 using Auth.Validators;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -13,23 +14,24 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-const string appTitle = "Tickets Auth API V1";
+const string appTitle = "Tickets Management Auth API V1";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-builder.Services.AddIdentityCore<User>();
-
+var userIdentityOptions = builder.Configuration
+  .GetSection(nameof(UserIdentityOptions))
+  .Get<UserIdentityOptions>();
 builder.Services.AddIdentity<User, Role>(cfg =>
   {
-    cfg.User.RequireUniqueEmail = true;
-    cfg.Password.RequireDigit = false;
-    cfg.Password.RequiredLength = 6;
-    cfg.Password.RequiredUniqueChars = 0;
-    cfg.Password.RequireLowercase = false;
-    cfg.Password.RequireNonAlphanumeric = false;
-    cfg.Password.RequireUppercase = false;
+    cfg.User.RequireUniqueEmail = userIdentityOptions.RequireUniqueEmail;
+    cfg.Password.RequireDigit = userIdentityOptions.RequireDigit;
+    cfg.Password.RequiredLength = userIdentityOptions.RequiredLength;
+    cfg.Password.RequiredUniqueChars = userIdentityOptions.RequiredUniqueChars;
+    cfg.Password.RequireLowercase = userIdentityOptions.RequireLowercase;
+    cfg.Password.RequireNonAlphanumeric = userIdentityOptions.RequireNonAlphanumeric;
+    cfg.Password.RequireUppercase = userIdentityOptions.RequireUppercase;
   })
   .AddEntityFrameworkStores<AppDbContext>()
   .AddUserManager<UserManager<User>>()
