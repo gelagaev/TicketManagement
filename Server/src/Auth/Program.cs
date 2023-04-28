@@ -12,9 +12,8 @@ using Infrastructure;
 using Infrastructure.Data;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-
-const string appTitle = "Tickets Management Auth API V1";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,25 +48,40 @@ builder.Services.AddDbContext<AppDbContext>(options => options
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddApiVersioning(opt =>
+{
+  opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(2, 0);
+  opt.AssumeDefaultVersionWhenUnspecified = true;
+  opt.ReportApiVersions = true;
+  opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+    new HeaderApiVersionReader("x-api-version"),
+    new MediaTypeApiVersionReader("x-api-version"));
+});
+
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+  setup.GroupNameFormat = "'V'VVV";
+  setup.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 builder.Services.AddValidatorsFromAssemblyContaining<SignInCommandValidator>(includeInternalTypes: true);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultAuthModule());
-  containerBuilder.RegisterModule(
-    new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+  containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.IsDevelopment()));
 });
 
-builder.Services.ConfigureSwagger(appTitle);
 builder.ConfigureBearerAuth();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-  app.UseAppSwagger(appTitle);
-}
+app.UseSwagger();
 
 app.UseHttpsRedirection();
 

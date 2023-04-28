@@ -6,7 +6,7 @@ namespace Infrastructure.Data.Config;
 
 public class UserClimeConfiguration : IEntityTypeConfiguration<IdentityUserClaim<Guid>>
 {
-    public void Configure(EntityTypeBuilder<IdentityUserClaim<Guid>> builder)
-    {
-    }
+  public void Configure(EntityTypeBuilder<IdentityUserClaim<Guid>> builder)
+  {
+  }
 }

@@ -1,10 +1,11 @@
 using Ardalis.ApiEndpoints;
+using Auth.Endpoints.Register.V1;
 using Auth.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Auth.Endpoints.Register;
+namespace Auth.Endpoints.Register.V2;
 
 public class Register : EndpointBaseAsync
   .WithRequest<RegisterRequest>
@@ -12,9 +13,10 @@ public class Register : EndpointBaseAsync
 {
   private readonly IMediator _mediator;
 
-  public Register(IMediator mediator) =>_mediator = mediator;
+  public Register(IMediator mediator) => _mediator = mediator;
 
-  [HttpPost(RegisterRequest.Route)]
+  [ApiVersion("2.0")]
+  [HttpPost("api/V{version:apiVersion}/Register")]
   [SwaggerOperation(
     Summary = "Register",
     Description = "Register",
@@ -23,9 +25,9 @@ public class Register : EndpointBaseAsync
   ]
   public override async Task<ActionResult<RegisterResponse>> HandleAsync(
     RegisterRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken ct = new())
   {
-    var response = await _mediator.Send(request.ToCommand(), cancellationToken);
+    var response = await _mediator.Send(request.ToCommand(), ct);
     return Ok(response);
   }
 }

@@ -42,7 +42,7 @@ public static class JwtConfig
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey))
         };
       });
-    
+
     builder.Services.Configure<AuthTokenOptions>(authTokenSettingsSection);
   }
 }

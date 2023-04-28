@@ -1,4 +1,4 @@
-﻿using Auth.Endpoints.SignIn;
+﻿using Auth.Endpoints.SignIn.V1;
 using Auth.Interfaces;
 using Core.UserAggregate;
 using MediatR;

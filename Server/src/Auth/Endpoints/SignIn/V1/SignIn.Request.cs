@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Auth.Endpoints.SignIn;
+namespace Auth.Endpoints.SignIn.V1;
 
 /// <summary>
 /// Sign In request
 /// </summary>
 public sealed class SignInRequest
 {
-  internal const string Route = "/SignIn";
   [Required]
   public string Email { get; init; } = string.Empty;
 

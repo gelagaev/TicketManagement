@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Auth.Endpoints.SignIn;
+namespace Auth.Endpoints.SignIn.V1;
 
 /// <summary>
 /// Command to try Sign In

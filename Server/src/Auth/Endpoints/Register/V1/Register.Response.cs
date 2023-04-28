@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Auth.Endpoints.Register;
+namespace Auth.Endpoints.Register.V1;
 
 /// <summary>
 /// Register response

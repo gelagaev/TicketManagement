@@ -6,9 +6,9 @@ namespace Infrastructure.Data.Config;
 
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
-    public void Configure(EntityTypeBuilder<Role> builder)
-    {
-      builder.HasKey(entity => entity.Id);
-      builder.Property(entity => entity.Id).HasDefaultValueSql("newsequentialid()");
-    }
+  public void Configure(EntityTypeBuilder<Role> builder)
+  {
+    builder.HasKey(entity => entity.Id);
+    builder.Property(entity => entity.Id).HasDefaultValueSql("newsequentialid()");
+  }
 }

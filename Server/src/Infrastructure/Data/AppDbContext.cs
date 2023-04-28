@@ -33,9 +33,9 @@ public class AppDbContext : IdentityDbContext<User, Role, Guid,
     modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
   }
 
-  public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+  public override async Task<int> SaveChangesAsync(CancellationToken ct = new())
   {
-    int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    int result = await base.SaveChangesAsync(ct).ConfigureAwait(false);
     
     if (_dispatcher == null) return result;
 

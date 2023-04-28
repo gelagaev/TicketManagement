@@ -1,4 +1,4 @@
-﻿namespace Auth.Endpoints.SignIn;
+﻿namespace Auth.Endpoints.SignIn.V1;
 
 /// <summary>
 /// Login response

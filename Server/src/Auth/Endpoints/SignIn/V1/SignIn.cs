@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Auth.Endpoints.SignIn;
+namespace Auth.Endpoints.SignIn.V1;
 
 public class Create : EndpointBaseAsync
   .WithRequest<SignInRequest>
@@ -12,9 +12,10 @@ public class Create : EndpointBaseAsync
 {
   private readonly IMediator _mediator;
 
-  public Create(IMediator mediator) =>_mediator = mediator;
+  public Create(IMediator mediator) => _mediator = mediator;
 
-  [HttpPost(SignInRequest.Route)]
+  [ApiVersion("1.0")]
+  [HttpPost("api/V{version:apiVersion}/SignIn")]
   [SwaggerOperation(
     Summary = "SignIn",
     Description = "SignIn",
@@ -23,9 +24,9 @@ public class Create : EndpointBaseAsync
   ]
   public override async Task<ActionResult<SignInResponse>> HandleAsync(
     SignInRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken ct = new())
   {
-    var response = await _mediator.Send(request.ToCommand(), cancellationToken);
+    var response = await _mediator.Send(request.ToCommand(), ct);
     return Ok(response);
   }
 }

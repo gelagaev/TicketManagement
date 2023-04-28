@@ -6,7 +6,7 @@ namespace Infrastructure.Data.Config;
 
 public class RoleClimeConfiguration : IEntityTypeConfiguration<IdentityRoleClaim<Guid>>
 {
-    public void Configure(EntityTypeBuilder<IdentityRoleClaim<Guid>> builder)
-    {
-    }
+  public void Configure(EntityTypeBuilder<IdentityRoleClaim<Guid>> builder)
+  {
+  }
 }
