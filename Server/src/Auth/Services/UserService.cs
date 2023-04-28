@@ -20,11 +20,22 @@ internal sealed class UserService : IUserService
   /// </summary>
   public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request)
   {
-    var user = new User { IsActive = true, Email = request.Email, UserName = request.Email, };
+    var user = new User
+    {
+      IsActive = true,
+      Email = request.Email,
+      UserName = request.Email,
+      FirstName = request.FirstName,
+      LastName = request.LastName,
+    };
 
     var result = await _userManager.CreateAsync(user, request.Password);
     await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
 
-    return new RegisterResponse { Errors = result.Errors.Any() ? result.Errors : null };
+    return new RegisterResponse
+    {
+      Success = !result.Errors.Any(),
+      Errors = result.Errors.Any() ? result.Errors : null
+    };
   }
 }
