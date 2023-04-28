@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Auth.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,7 +25,7 @@ public class Create : EndpointBaseAsync
     SignInRequest request,
     CancellationToken ct = new())
   {
-    var response = await _mediator.Send(request.ToCommand(), ct);
+    var response = await _mediator.Send(request, ct);
     return Ok(response);
   }
 }

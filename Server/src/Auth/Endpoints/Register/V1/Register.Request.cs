@@ -1,9 +1,11 @@
-﻿namespace Auth.Endpoints.Register.V1;
+﻿using MediatR;
+
+namespace Auth.Endpoints.Register.V1;
 
 /// <summary>
 /// Register request
 /// </summary>
-public sealed class RegisterRequest
+public sealed class RegisterRequest : IRequest<RegisterResponse>
 {
   public string Email { get; init; } = string.Empty;
   public string Password { get; init; } = string.Empty;

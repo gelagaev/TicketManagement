@@ -4,11 +4,11 @@ using FluentValidation;
 namespace Auth.Validators;
 
 /// <summary>
-/// Validator for <see cref="SignInCommand"/>
+/// Validator for <see cref="SignInRequest"/>
 /// </summary>
-internal sealed class SignInCommandValidator : AbstractValidator<SignInCommand>
+internal sealed class SignInRequestValidator : AbstractValidator<SignInRequest>
 {
-  public SignInCommandValidator()
+  public SignInRequestValidator()
   {
     RuleFor(request => request.Email)
       .NotEmpty()

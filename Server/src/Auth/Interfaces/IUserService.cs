@@ -10,7 +10,7 @@ internal interface IUserService
   /// <summary>
   /// Registers user
   /// </summary>
-  /// <param name="request">Register command</param>
+  /// <param name="request">Register request</param>
   /// <returns>Register Response<see cref="RegisterResponse"/></returns>
-  Task<RegisterResponse> RegisterUserAsync(RegisterCommand request);
+  Task<RegisterResponse> RegisterUserAsync(RegisterRequest request);
 }

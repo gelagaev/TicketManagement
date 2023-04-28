@@ -1,6 +1,5 @@
 using Ardalis.ApiEndpoints;
 using Auth.Endpoints.Register.V1;
-using Auth.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -27,7 +26,7 @@ public class Register : EndpointBaseAsync
     RegisterRequest request,
     CancellationToken ct = new())
   {
-    var response = await _mediator.Send(request.ToCommand(), ct);
+    var response = await _mediator.Send(request, ct);
     return Ok(response);
   }
 }

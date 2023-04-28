@@ -18,7 +18,7 @@ internal sealed class UserService : IUserService
   /// <summary>
   /// <inheritdoc />
   /// </summary>
-  public async Task<RegisterResponse> RegisterUserAsync(RegisterCommand request)
+  public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request)
   {
     var user = new User { IsActive = true, Email = request.Email, UserName = request.Email, };
 

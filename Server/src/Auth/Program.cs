@@ -43,8 +43,8 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options
-  .UseSqlServer(connectionString)
-  .UseLazyLoadingProxies());
+  .UseSqlServer(connectionString));
+  // .UseLazyLoadingProxies());
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -68,8 +68,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-builder.Services.AddValidatorsFromAssemblyContaining<SignInCommandValidator>(includeInternalTypes: true);
+// builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+builder.Services.AddValidatorsFromAssemblyContaining<SignInRequestValidator>(includeInternalTypes: true);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {

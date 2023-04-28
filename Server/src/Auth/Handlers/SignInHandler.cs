@@ -3,10 +3,11 @@ using Auth.Interfaces;
 using Core.UserAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Handlers;
 
-public class SignInHandler : IRequestHandler<SignInCommand, SignInResponse>
+public class SignInHandler : IRequestHandler<SignInRequest, SignInResponse>
 {
   private readonly UserManager<User> _userManager;
   private readonly ITokenService _tokenService;
@@ -17,9 +18,12 @@ public class SignInHandler : IRequestHandler<SignInCommand, SignInResponse>
     _tokenService = tokenService;
   }
 
-  public async Task<SignInResponse> Handle(SignInCommand request, CancellationToken ct)
+  public async Task<SignInResponse> Handle(SignInRequest request, CancellationToken ct)
   {
-    var user = await _userManager.FindByEmailAsync(request.Email);
+    var user = _userManager.Users
+      .Include(u => u.Roles)
+      .ThenInclude(r => r.Role)
+      .FirstOrDefault(u => u.Email == request.Email);
 
     if (user == null || user.IsActive == false || !await _userManager.CheckPasswordAsync(user, request.Password))
     {

@@ -1,20 +1,20 @@
 using FluentValidation;
 using MediatR;
+using MediatR.Pipeline;
 
 namespace Auth.Validators;
 
-public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-  where TRequest : IRequest<TResponse>
+public class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
   private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-  public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
+  public ValidationPreProcessor(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
 
-  public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
+  public async Task Process(TRequest request, CancellationToken ct)
   {
     if (!_validators.Any())
     {
-      return await next();
+      return;
     }
 
     var context = new ValidationContext<TRequest>(request);
@@ -29,7 +29,5 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     {
       throw new ValidationException(failures);
     }
-
-    return await next();
   }
 }
