@@ -25,5 +25,19 @@ services:
     volumes:
       - ./Blob/:/opt/azurite/folder
 
+  web-api:
+    image: ticket-manager/web-api
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+        
+  auth:
+    image: ticket-manager/auth
+    ports:
+      - "8081:80"
+    depends_on:
+      - database
+
 volumes:
   data:

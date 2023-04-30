@@ -1,0 +1,27 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+#COPY ["TicketManagement.sln", "src/"]
+COPY ["src/WebApi/WebApi.csproj", "src/src/WebApi/"]
+COPY ["src/Infrastructure/Infrastructure.csproj", "src/src/Infrastructure/"]
+COPY ["src/Core/Core.csproj", "src/src/Core/"]
+COPY ["src/Kernel/Kernel.csproj", "src/src/Kernel/"]
+RUN dotnet restore "src/src/WebApi/WebApi.csproj"
+RUN dotnet restore "src/src/Infrastructure/Infrastructure.csproj"
+RUN dotnet restore "src/src/Core/Core.csproj"
+RUN dotnet restore "src/src/Kernel/Kernel.csproj"
+WORKDIR "/src/src/"
+COPY . .
+RUN dotnet build "src/WebApi/WebApi.csproj" -c Release -o /app/build
+#
+FROM build AS publish
+RUN dotnet publish "src/WebApi/WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+#
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "WebApi.dll"]
