@@ -1,5 +1,6 @@
 ﻿using Auth.Endpoints.SignIn.V1;
 using Auth.Interfaces;
+using Core;
 using Core.UserAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ public class SignInHandler : IRequestHandler<SignInRequest, SignInResponse>
   public async Task<SignInResponse> Handle(SignInRequest request, CancellationToken ct)
   {
     var user = _userManager.Users
-      .Include(u => u.Roles)
+      .Include(u => u.UserRoles)
       .ThenInclude(r => r.Role)
       .FirstOrDefault(u => u.Email == request.Email);
 

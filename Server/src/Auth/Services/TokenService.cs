@@ -27,7 +27,7 @@ internal sealed class TokenService : ITokenService
   {
     var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id.ToString()) };
 
-    claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Role.Name!)));
+    claims.AddRange(user.UserRoles.Select(role => new Claim(ClaimTypes.Role, role.Role.Name!)));
 
     var secretKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.SecretKey));
     var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);

@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Auth.Interfaces;
-using Auth.Middleware;
 using Auth.Services;
 using Autofac;
+using Core.Middleware;
 
 namespace Auth;
 
