@@ -1,8 +1,7 @@
 using FluentValidation;
-using MediatR;
 using MediatR.Pipeline;
 
-namespace Auth.Validators;
+namespace Core;
 
 public class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
