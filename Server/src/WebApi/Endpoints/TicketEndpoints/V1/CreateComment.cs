@@ -1,10 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Core.TicketAggregate.Specifications;
-using Core.UserAggregate;
-using Kernel.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -14,18 +10,12 @@ public class CreateComment : EndpointBaseAsync
   .WithRequest<CreateCommentRequest>
   .WithActionResult
 {
-  private readonly IRepository<Ticket> _repository;
-  private readonly UserManager<User> _userManager;
-  private readonly IHttpContextAccessor _contextAccessor;
+  private readonly IMediator _mediator;
 
-  public CreateComment(IRepository<Ticket> repository, UserManager<User> userManager, IHttpContextAccessor contextAccessor)
-  {
-    _repository = repository;
-    _userManager = userManager;
-    _contextAccessor = contextAccessor;
-  }
+  public CreateComment(IMediator mediator) => _mediator = mediator;
 
   [Authorize]
+  [ApiVersion("1.0")]
   [HttpPost(CreateCommentRequest.Route)]
   [SwaggerOperation(
     Summary = "Creates a new Comment for a Ticket",
@@ -37,23 +27,7 @@ public class CreateComment : EndpointBaseAsync
     CreateCommentRequest request,
     CancellationToken ct = new())
   {
-    var spec = new TicketByIdWithCommentsSpec(request.TicketId);
-    var entity = await _repository.FirstOrDefaultAsync(spec, ct);
-    if (entity == null)
-    {
-      return NotFound();
-    }
-
-    var userId = _userManager.GetUserId(_contextAccessor.HttpContext!.User);
-    var newComment = new Comment()
-    {
-      CommentText = request.CommentText!,
-      UserId = Guid.Parse(userId),
-    };
-    
-    entity.AddComment(newComment);
-    await _repository.UpdateAsync(entity, ct);
-
-    return Created(GetTicketByIdRequest.BuildRoute(request.TicketId), null);
+    var response = await _mediator.Send(request, ct);
+    return response;
   }
 }
