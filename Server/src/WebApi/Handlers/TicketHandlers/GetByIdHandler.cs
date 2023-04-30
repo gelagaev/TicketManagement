@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Ardalis.GuardClauses;
 using Core.TicketAggregate;
 using Core.TicketAggregate.Specifications;
 using Kernel.Interfaces;
@@ -16,12 +17,7 @@ public class GetByIdHandler : IRequestHandler<GetTicketByIdRequest, GetTicketByI
   {
     var spec = new TicketByIdWithCommentsSpec(request.TicketId);
     var entity = await _repository.FirstOrDefaultAsync(spec, ct);
-    if (entity == null)
-    {
-      //todo move to validator
-      throw new ValidationException();
-      // return NotFound();
-    }
+    Guard.Against.Null(entity, nameof(entity));
 
     var response = new GetTicketByIdResponse
     (
