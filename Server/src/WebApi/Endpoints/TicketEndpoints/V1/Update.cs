@@ -1,22 +1,19 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Kernel.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class Update : EndpointBaseAsync
-    .WithRequest<UpdateTicketRequest>
-    .WithActionResult<UpdateTicketResponse>
+public class Update : EndpointBaseAsync.WithRequest<UpdateTicketRequest>.WithActionResult<UpdateTicketResponse>
 {
-  private readonly IRepository<Ticket> _repository;
+  private readonly IMediator _mediator;
 
-  public Update(IRepository<Ticket> repository)
-  {
-    _repository = repository;
-  }
+  public Update(IMediator mediator) => _mediator = mediator;
 
+  [Authorize]
+  [ApiVersion("1.0")]
   [HttpPut(UpdateTicketRequest.Route)]
   [SwaggerOperation(
       Summary = "Updates a Ticket",
@@ -28,20 +25,7 @@ public class Update : EndpointBaseAsync
     UpdateTicketRequest request,
       CancellationToken ct = new ())
   {
-    var existingTicket = await _repository.GetByIdAsync(request.Id, ct);
-    if (existingTicket == null)
-    {
-      return NotFound();
-    }
-
-    existingTicket.UpdateSubject(request.Subject);
-    existingTicket.UpdateDescription(request.Description);
-
-    await _repository.UpdateAsync(existingTicket, ct);
-
-    var response = new UpdateTicketResponse(
-        ticket: new TicketRecord(existingTicket.Id, existingTicket.Subject, existingTicket.Description)
-    );
+    var response = await _mediator.Send(request, ct);
 
     return Ok(response);
   }

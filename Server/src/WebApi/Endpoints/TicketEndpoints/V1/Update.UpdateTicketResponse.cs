@@ -6,5 +6,5 @@ public class UpdateTicketResponse
   {
     Ticket = ticket;
   }
-  public TicketRecord Ticket { get; set; }
+  public TicketRecord Ticket { get; private set; }
 }
