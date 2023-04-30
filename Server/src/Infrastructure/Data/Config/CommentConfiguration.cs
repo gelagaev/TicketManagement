@@ -11,7 +11,8 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     builder.HasKey(user => user.Id);
     builder.Property(entity => entity.Id).HasDefaultValueSql("newsequentialid()");
     builder.Property(t => t.CommentText)
-      .IsRequired();
+      .IsRequired()
+      .HasMaxLength(1000);
     builder.Property(t => t.UserId)
       .IsRequired();
   }
