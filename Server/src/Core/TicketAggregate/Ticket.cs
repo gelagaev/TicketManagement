@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Core.TicketAggregate.Events;
+using Core.UserAggregate;
 using Kernel;
 using Kernel.Interfaces;
 
@@ -9,6 +10,8 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
 {
   public string Subject { get; private set; }
   public string Description { get; private set; }
+  public Guid AuthorUserId { get; private set; }
+  public Guid AssignToUserId { get; private set; }
 
   public bool IsDone { get; private set; }
   private readonly List<Comment> _comments = new();
@@ -17,11 +20,12 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
 
   public PriorityStatus Priority { get; }
 
-  public Ticket(string subject, string description, PriorityStatus priority)
+  public Ticket(string subject, string description, PriorityStatus priority, Guid authorUserId)
   {
     Subject = Guard.Against.NullOrEmpty(subject, nameof(subject));
     Description = Guard.Against.NullOrEmpty(description, nameof(description));
     Priority = priority;
+    AuthorUserId = authorUserId;
   }
   
   public void MarkComplete()
@@ -51,5 +55,19 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   public void UpdateDescription(string newDescription)
   {
     Description = Guard.Against.NullOrEmpty(newDescription, nameof(newDescription));
+  }
+
+  public void AssignToUser(Guid userId)
+  {
+    AssignToUserId = userId;
+  }
+
+  public bool IsUserAuthor(User user)
+  {
+    return user.Id == AuthorUserId;
+  }
+  public bool IsAssignToUser(User user)
+  {
+    return user.Id == AssignToUserId;
   }
 }
