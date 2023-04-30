@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Core.TicketAggregate.Specifications;
-using Kernel.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,13 +10,12 @@ public class GetById : EndpointBaseAsync
   .WithRequest<GetTicketByIdRequest>
   .WithActionResult<GetTicketByIdResponse>
 {
-  private readonly IRepository<Ticket> _repository;
+  private readonly IMediator _mediator;
 
-  public GetById(IRepository<Ticket> repository)
-  {
-    _repository = repository;
-  }
+  public GetById(IMediator mediator) => _mediator = mediator;
 
+  [Authorize]
+  [ApiVersion("1.0")]
   [HttpGet(GetTicketByIdRequest.Route)]
   [SwaggerOperation(
     Summary = "Gets a single Ticket",
@@ -26,27 +24,9 @@ public class GetById : EndpointBaseAsync
     Tags = new[] { "TicketEndpoints" })
   ]
   public override async Task<ActionResult<GetTicketByIdResponse>> HandleAsync(
-    [FromRoute] GetTicketByIdRequest request,
-    CancellationToken ct = new())
+    [FromRoute] GetTicketByIdRequest request, CancellationToken ct = new())
   {
-    var spec = new TicketByIdWithCommentsSpec(request.TicketId);
-    var entity = await _repository.FirstOrDefaultAsync(spec, ct);
-    if (entity == null)
-    {
-      return NotFound();
-    }
-
-    var response = new GetTicketByIdResponse
-    (
-      id: entity.Id,
-      subject: entity.Subject,
-      description: entity.Description,
-      comments: entity.Comments.Select(
-        item => new CommentRecord(item.Id, 
-          item.CommentText,
-          item.UserId))
-        .ToList()
-    );
+    var response = await _mediator.Send(request, ct);
 
     return Ok(response);
   }
