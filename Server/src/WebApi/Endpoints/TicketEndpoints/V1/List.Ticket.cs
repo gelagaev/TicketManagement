@@ -1,6 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Kernel.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,10 +10,11 @@ public class List : EndpointBaseAsync
   .WithoutRequest
   .WithActionResult<TicketListResponse>
 {
-  private readonly IReadRepository<Ticket> _repository;
+  private readonly IMediator _mediator;
+  public List(IMediator mediator) => _mediator = mediator;
 
-  public List(IReadRepository<Ticket> repository) => _repository = repository;
-
+  [Authorize]
+  [ApiVersion("1.0")]
   [HttpGet("/Tickets")]
   [SwaggerOperation(
     Summary = "Gets a list of all Tickets",
@@ -23,13 +24,7 @@ public class List : EndpointBaseAsync
   ]
   public override async Task<ActionResult<TicketListResponse>> HandleAsync(CancellationToken ct = new())
   {
-    var tickets = await _repository.ListAsync(ct);
-    var response = new TicketListResponse
-    {
-      Tickets = tickets
-        .Select(ticket => new TicketRecord(ticket.Id, ticket.Subject, ticket.Description))
-        .ToList()
-    };
+    var response = await _mediator.Send(new TicketListCommand(), ct);
 
     return Ok(response);
   }
