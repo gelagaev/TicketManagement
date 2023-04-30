@@ -1,41 +1,32 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Kernel.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
 public class Delete : EndpointBaseAsync
-    .WithRequest<DeleteTicketRequest>
-    .WithoutResult
+  .WithRequest<DeleteTicketRequest>
+  .WithoutResult
 {
-  private readonly IRepository<Ticket> _repository;
+  private readonly IMediator _mediator;
 
-  public Delete(IRepository<Ticket> repository)
-  {
-    _repository = repository;
-  }
+  public Delete(IMediator mediator) => _mediator = mediator;
 
+  [Authorize]
+  [ApiVersion("1.0")]
   [HttpDelete(DeleteTicketRequest.Route)]
   [SwaggerOperation(
-      Summary = "Deletes a Ticket",
-      Description = "Deletes a Ticket",
-      OperationId = "Tickets.Delete",
-      Tags = new[] { "TicketEndpoints" })
+    Summary = "Deletes a Ticket",
+    Description = "Deletes a Ticket",
+    OperationId = "Tickets.Delete",
+    Tags = new[] { "TicketEndpoints" })
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteTicketRequest request,
-      CancellationToken ct = new())
+    CancellationToken ct = new())
   {
-    var aggregateToDelete = await _repository.GetByIdAsync(request.TicketId, ct);
-    if (aggregateToDelete == null)
-    {
-      return NotFound();
-    }
-
-    await _repository.DeleteAsync(aggregateToDelete, ct);
-
-    return NoContent();
+    return await _mediator.Send(request, ct);
   }
 }
