@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class CreateTicketRequest
+public class CreateTicketRequest : IRequest<CreateTicketResponse>
 {
   [Required]
   public string Subject { get; set; } = string.Empty;

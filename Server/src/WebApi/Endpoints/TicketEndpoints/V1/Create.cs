@@ -1,6 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using Core.TicketAggregate;
-using Kernel.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,11 +10,13 @@ public class Create : EndpointBaseAsync
   .WithRequest<CreateTicketRequest>
   .WithActionResult<CreateTicketResponse>
 {
-  private readonly IRepository<Ticket> _repository;
+  private readonly IMediator _mediator;
 
-  public Create(IRepository<Ticket> repository) => _repository = repository;
+  public Create(IMediator mediator) => _mediator = mediator;
 
   [HttpPost("/Tickets")]
+  [ApiVersion("1.0")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Creates a new Ticket",
     Description = "Creates a new Ticket",
@@ -25,14 +27,7 @@ public class Create : EndpointBaseAsync
     CreateTicketRequest request,
     CancellationToken ct = new())
   {
-    var newTicket = new Ticket(request.Subject, request.Description, PriorityStatus.Backlog);
-    var createdItem = await _repository.AddAsync(newTicket, ct);
-    var response = new CreateTicketResponse
-    (
-      id: createdItem.Id,
-      subject: createdItem.Subject,
-      description: createdItem.Description
-    );
+    var response = await _mediator.Send(request, ct);
 
     return Ok(response);
   }
