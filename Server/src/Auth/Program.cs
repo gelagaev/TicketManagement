@@ -1,17 +1,18 @@
 using System.Reflection;
 using Auth;
-using Auth.Middleware;
 using Auth.Options;
 using Auth.Validators;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core;
 using Core.Configurations;
+using Core.Middleware;
 using Core.UserAggregate;
 using FluentValidation;
 using Infrastructure;
 using Infrastructure.Data;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,11 @@ builder.Services.AddIdentity<User, Role>(cfg =>
   .AddUserManager<UserManager<User>>()
   .AddRoleManager<RoleManager<Role>>();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddMediatR(cfg =>
+{
+  cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+  cfg.RegisterServicesFromAssemblyContaining<DefaultCoreModule>();
+});
 
 builder.Services.AddControllers();
 
@@ -44,13 +49,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options => options
   .UseSqlServer(connectionString));
-  // .UseLazyLoadingProxies());
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddApiVersioning(opt =>
 {
-  opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(2, 0);
+  opt.DefaultApiVersion = new ApiVersion(2, 0);
   opt.AssumeDefaultVersionWhenUnspecified = true;
   opt.ReportApiVersions = true;
   opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
@@ -68,7 +72,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-// builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 builder.Services.AddValidatorsFromAssemblyContaining<SignInRequestValidator>(includeInternalTypes: true);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>

@@ -10,7 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     <PackageReference Include="FluentValidation" />
@@ -20,13 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\.dockerignore">
-      <Link>.dockerignore</Link>
-    </Content>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <Compile Remove="Endpoints\Register\V1\Register.Command.cs" />
+    <Compile Remove="Endpoints\SignIn\V1\SignIn.Command.cs" />
   </ItemGroup>
 
 </Project>

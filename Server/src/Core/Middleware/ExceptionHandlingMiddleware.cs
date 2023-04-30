@@ -1,10 +1,11 @@
 using System.Text.Json;
 using FluentValidation;
-using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace Auth.Middleware;
+namespace Core.Middleware;
 
-internal sealed class ExceptionHandlingMiddleware : IMiddleware
+public sealed class ExceptionHandlingMiddleware : IMiddleware
 {
   private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 

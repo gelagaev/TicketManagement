@@ -14,6 +14,7 @@ public class Create : EndpointBaseAsync
   public Create(IMediator mediator) => _mediator = mediator;
 
   [ApiVersion("1.0")]
+  [ApiVersion("2.0")]
   [HttpPost("api/V{version:apiVersion}/SignIn")]
   [SwaggerOperation(
     Summary = "SignIn",
