@@ -6,7 +6,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ControlErrorsPipe } from "../../Pipes/errors-pipe.pipe";
+import { ControlErrorsPipe } from "../../Pipes/control-errors.pipe";
 
 @Component({
   selector: 'tm-sign-in',
