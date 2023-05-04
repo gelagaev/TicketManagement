@@ -13,8 +13,8 @@ export class TicketEffects {
   load$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(TicketActions.loadTickets),
-        exhaustMap((payload) => {
-          return this.serviceProxy.ticket_List(undefined)
+        exhaustMap(() => {
+          return this.serviceProxy.ticket_List(undefined) //todo fix
             .pipe(
               map(response => TicketActions.loadTicketSuccess({tickets: response.tickets!})), //todo
               catchError((error: BackendError) => of(TicketActions.loadTicketFailure(error)))
