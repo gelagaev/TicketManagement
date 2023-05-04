@@ -30,6 +30,7 @@ export class ServiceProxy {
 
     /**
      * Creates a new Comment for a Ticket
+     * @param ticketId
      * @param x_api_version (optional)
      * @param body (optional)
      * @return Success
@@ -88,6 +89,7 @@ export class ServiceProxy {
 
     /**
      * Deletes a Ticket
+     * @param ticketId
      * @param x_api_version (optional)
      * @return Success
      */
@@ -141,6 +143,7 @@ export class ServiceProxy {
 
     /**
      * Gets a single Ticket
+     * @param ticketId
      * @param x_api_version (optional)
      * @return Success
      */
@@ -183,7 +186,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetTicketByIdResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -237,7 +240,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TicketListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -296,7 +299,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
