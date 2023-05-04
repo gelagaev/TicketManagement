@@ -1,5 +1,5 @@
-import { Action, createReducer, on } from '@ngrx/store';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { createReducer, on } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import * as TicketActions from '../actions/ticket.actions';
 import { TicketRecord } from "../../services/web-api-service-proxies";
 
