@@ -1,2 +1,4 @@
-<p>ticket-list works!</p>
-<p>{{tickets$ | async | json}}</p>
+<div class="container">
+  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async" [ticket]="ticket"></tm-ticket-list-item>
+  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async" [ticket]="ticket"></tm-ticket-list-item>
+</div>
