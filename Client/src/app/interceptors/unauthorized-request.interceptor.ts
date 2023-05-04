@@ -17,5 +17,4 @@ export const unauthorizedRequestInterceptor: HttpInterceptorFn = (req, next) => 
       return throwError(error);
     }),
   );
-  ;
 };
