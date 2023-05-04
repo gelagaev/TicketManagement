@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignInComponent } from './sign-in.component';
+import { provideMockStore } from "@ngrx/store/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe('SignInComponent', () => {
   let component: SignInComponent;
@@ -7,9 +9,9 @@ describe('SignInComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ SignInComponent ]
-    })
-    .compileComponents();
+      imports: [SignInComponent],
+      providers: [provideMockStore({}), provideAnimations()]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SignInComponent);
     component = fixture.componentInstance;
