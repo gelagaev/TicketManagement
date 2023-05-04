@@ -23,7 +23,6 @@ export const ticketReducer = createReducer(
 
 export const getSelectedTicketId = (state: State) => state.selectedTicketId;
 
-// get the selectors
 const {
   selectIds,
   selectEntities,

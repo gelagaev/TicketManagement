@@ -1,9 +1,9 @@
 ﻿{
-  "runtime": "Default",
+  "runtime": "Net70",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://localhost:7116/swagger/V2/swagger.json",
+      "url": "https://localhost:7116/swagger/V1/swagger.json",
       "output": null
     }
   },
@@ -12,13 +12,13 @@
       "className": "{controller}ServiceProxy",
       "moduleName": "",
       "namespace": "",
-      "typeScriptVersion": 3.2,
+      "typeScriptVersion": 4.9,
       "template": "Angular",
       "promiseType": "Promise",
       "httpClass": "HttpClient",
       "useSingletonProvider": true,
       "injectionTokenType": "InjectionToken",
-      "rxJsVersion": 6.3,
+      "rxJsVersion": 7.8,
       "dateTimeType": "Date",
       "nullValue": "Undefined",
       "generateClientClasses": true,
@@ -52,7 +52,7 @@
       "convertConstructorInterfaceData": false,
       "importRequiredTypes": true,
       "useGetBaseUrlMethod": false,
-      "baseUrlTokenName": "API_BASE_URL",
+      "baseUrlTokenName": "WEB_API_BASE_URL",
       "queryNullValue": "",
       "inlineNamedDictionaries": false,
       "inlineNamedAny": false,

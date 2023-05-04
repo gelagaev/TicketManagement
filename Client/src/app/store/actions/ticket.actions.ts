@@ -5,3 +5,4 @@ import { BackendError } from "../../interceptors/http-request-failure.intercepto
 export const loadTickets = createAction('[Tickets] Load');
 export const loadTicketSuccess = createAction('[Tickets] Load success', props<{tickets: TicketRecord[]}>());
 export const loadTicketFailure = createAction('[Tickets] Load failure', props<BackendError>());
+export const updateSuccess = createAction('[Tickets] Update success');

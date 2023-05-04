@@ -1,0 +1,62 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-subtitle>This Ticket is <b>{{this.ticket.isDone ? 'Closed' : 'Active'}}</b></mat-card-subtitle>
+      <mat-card-title>
+        <div *ngIf="!isEdit">Ticket subject: {{ticket.subject}}</div>
+        <div *ngIf="isEdit">
+          <mat-form-field appearance="fill">
+            <mat-label>Subject</mat-label>
+            <input matInput placeholder="Subject" [formControl]="form.controls.subject">
+            <mat-error *ngIf="form.controls.subject.errors" [innerHTML]="form.controls.subject.errors | controlErrors">
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-title>
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content>
+    <div [ngSwitch]="isEdit">
+      <div *ngSwitchCase="true">
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput placeholder="Description" [formControl]="form.controls.description"></textarea>
+          <mat-error *ngIf="form.controls.description.errors"
+                     [innerHTML]="form.controls.description.errors | controlErrors">
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngSwitchCase="false">
+        {{ticket.description}}
+      </div>
+    </div>
+
+    <mat-accordion *ngIf="!isEdit">
+      <mat-expansion-panel (opened)="isShowComments = true"
+                           (closed)="isShowComments = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Comments
+          </mat-panel-title>
+          <mat-panel-description>
+            Click to show/hide tickets comments.
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <tm-ticket-comment-list *ngIf="isShowComments"></tm-ticket-comment-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <div [ngSwitch]="isEdit">
+      <div *ngSwitchCase="false">
+        <button type="button" mat-button (click)="onEdit()">Edit</button>
+        <button type="button" mat-button color="warn" (click)="onDelete()">Delete</button>
+      </div>
+      <div *ngSwitchCase="true">
+        <button type="button" mat-button (click)="onSave()">Save</button>
+        <button type="button" mat-button color="warn" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>
