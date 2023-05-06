@@ -1,0 +1,20 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+  <mat-card-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Subject</mat-label>
+      <input matInput placeholder="Subject" [formControl]="form.controls.subject">
+      <mat-error *ngIf="form.controls.subject.errors" [innerHTML]="form.controls.subject.errors | controlErrors">
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Description" [formControl]="form.controls.description"></textarea>
+      <mat-error *ngIf="form.controls.description.errors"
+                 [innerHTML]="form.controls.description.errors | controlErrors">
+      </mat-error>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button type="submit" mat-button color="primary" (click)="onSubmit()">Create</button>
+  </mat-card-actions>
+</form>
