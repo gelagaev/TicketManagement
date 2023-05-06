@@ -21,10 +21,10 @@ public class SignInHandler : IRequestHandler<SignInRequest, SignInResponse>
 
   public async Task<SignInResponse> Handle(SignInRequest request, CancellationToken ct)
   {
-    var user = _userManager.Users
+    var user = await _userManager.Users
       .Include(u => u.UserRoles)
       .ThenInclude(r => r.Role)
-      .FirstOrDefault(u => u.Email == request.Email);
+      .FirstOrDefaultAsync(u => u.Email == request.Email, ct);
 
     if (user == null || user.IsActive == false || !await _userManager.CheckPasswordAsync(user, request.Password))
     {
