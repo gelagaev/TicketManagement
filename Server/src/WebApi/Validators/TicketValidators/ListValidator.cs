@@ -9,8 +9,8 @@ internal sealed class ListValidator : AbstractValidator<TicketListCommand>
 {
   public ListValidator(ITicketPermissionAccessService permissionAccessService)
   {
-    RuleFor(_ => _)
-      .MustAsync(async (_, ct) => await permissionAccessService.CurrentUserCanGetAllTickets(ct))
-      .WithMessage(nameof(ErrorCodes.GET_ALL_TICKETS_ACCESS_DENIED));
+    // RuleFor(_ => _)
+      // .MustAsync(async (_, ct) => await permissionAccessService.CurrentUserCanGetAllTickets(ct));
+    // .WithMessage(nameof(ErrorCodes.GET_ALL_TICKETS_ACCESS_DENIED));
   } 
 }

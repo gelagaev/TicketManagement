@@ -14,4 +14,5 @@ public class User : IdentityUser<Guid>, IAggregateRoot
   public bool IsManager => UserExpressions.IsManager.Compile()(this);
   public bool IsClient => UserExpressions.IsClient.Compile()(this);
   public bool IsAdministratorOrManager => UserExpressions.IsAdministratorOrManager.Compile()(this);
+  public virtual string FullName => $"{FirstName} {LastName}";
 }
