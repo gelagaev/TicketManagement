@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Auth;
 using Auth.Options;
@@ -70,6 +71,15 @@ builder.Services.AddVersionedApiExplorer(setup =>
 
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(p => p
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+  );
+});
+
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SignInRequestValidator>(includeInternalTypes: true);
@@ -83,6 +93,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 builder.ConfigureBearerAuth();
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseSwagger();
 

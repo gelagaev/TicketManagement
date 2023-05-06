@@ -9,6 +9,7 @@ using FluentValidation;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using WebApi;
@@ -39,7 +40,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddApiVersioning(opt =>
 {
-  opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+  opt.DefaultApiVersion = new ApiVersion(1, 0);
   opt.AssumeDefaultVersionWhenUnspecified = true;
   opt.ReportApiVersions = true;
   opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
@@ -54,6 +55,15 @@ builder.Services.AddVersionedApiExplorer(setup =>
 });
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(p => p
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+  );
+});
 
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
@@ -73,6 +83,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 });
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseSwagger();
 
