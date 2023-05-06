@@ -10,22 +10,23 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
 {
   public string Subject { get; private set; }
   public string Description { get; private set; }
-  public Guid AuthorUserId { get; private set; }
-  public Guid AssignToUserId { get; private set; }
 
   public bool IsDone { get; private set; }
   private readonly List<Comment> _comments = new();
   public IEnumerable<Comment> Comments => _comments.AsReadOnly();
+  public User Author { get; private set; } = default!;
+  public User AssignedTo { get; private set; } = default!;
+  public Guid? AssignedId { get; private set; }
+
   public TicketStatus Status => IsDone ? TicketStatus.Complete : TicketStatus.InProgress;
 
   public PriorityStatus Priority { get; }
 
-  public Ticket(string subject, string description, PriorityStatus priority, Guid authorUserId)
+  public Ticket(string subject, string description, PriorityStatus priority)
   {
     Subject = Guard.Against.NullOrEmpty(subject, nameof(subject));
     Description = Guard.Against.NullOrEmpty(description, nameof(description));
     Priority = priority;
-    AuthorUserId = authorUserId;
   }
   
   public void MarkComplete()
@@ -57,17 +58,23 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
     Description = Guard.Against.NullOrEmpty(newDescription, nameof(newDescription));
   }
 
-  public void AssignToUser(Guid userId)
+  public void AssignToUser(User user)
   {
-    AssignToUserId = userId;
+    AssignedTo = user;
+  }
+  
+  public void SetAuthor(User user)
+  {
+    Author = user;
   }
 
   public bool IsUserAuthor(User user)
   {
-    return user.Id == AuthorUserId;
+    return user.Id == Author.Id;
   }
-  public bool IsAssignToUser(User user)
+
+  public bool IsAssignTo(User user)
   {
-    return user.Id == AssignToUserId;
+    return user.Id == AssignedTo.Id;
   }
 }
