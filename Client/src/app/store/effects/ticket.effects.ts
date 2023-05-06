@@ -63,7 +63,7 @@ export class TicketEffects {
         exhaustMap(request => {
           return this.serviceProxy.tickets_Delete(request.ticketId)
             .pipe(
-              map(response => TicketActions.deleteTicketSuccess({ticketId: request.ticketId})),
+              map(() => TicketActions.deleteTicketSuccess({ticketId: request.ticketId})),
               catchError((error: BackendError) => of(TicketActions.deleteTicketFailure(error)))
             );
         })

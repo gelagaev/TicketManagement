@@ -42,7 +42,7 @@ export class CommentEffects {
         exhaustMap(({commentId}) => {
           return this.serviceProxy.tickets_DeleteComment(commentId)
             .pipe(
-              map(response => CommentActions.deleteTicketCommentSuccess({commentId})),
+              map(() => CommentActions.deleteTicketCommentSuccess({commentId})),
               catchError((error: BackendError) => of(CommentActions.deleteTicketCommentFailure(error)))
             );
         })
@@ -73,10 +73,4 @@ export class CommentEffects {
       })
     )
   );
-
-  // loadSuccess$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(TicketActions.loadTicketSuccess),
-  //     map(response => TicketActions.loadTicketSuccess({tickets: response.tickets}))
-  //   ), {dispatch: false});
 }
