@@ -1,4 +1,3 @@
 <div class="container">
-  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async" [ticket]="ticket"></tm-ticket-list-item>
-  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async" [ticket]="ticket"></tm-ticket-list-item>
+  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async; trackBy: trackByFn;"  [ticket]="ticket"></tm-ticket-list-item>
 </div>

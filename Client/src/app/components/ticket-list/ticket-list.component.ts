@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { select, Store } from "@ngrx/store";
 import { TicketActions } from "../../store/actions";
 import { TicketRecord } from "../../services/web-api-service-proxies";
-import { selectAllTickets } from "../../store/reducers";
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
-
+import { selectAllTickets } from "../../store/reducers/index.ticket";
 
 @Component({
   selector: 'tm-ticket-list',
@@ -22,5 +21,9 @@ export class TicketListComponent {
 
   constructor(private store: Store<TicketRecord>) {
     this.store.dispatch(TicketActions.loadTickets());
+  }
+
+  public trackByFn(index: number, {id}: TicketRecord): string {
+    return id;
   }
 }
