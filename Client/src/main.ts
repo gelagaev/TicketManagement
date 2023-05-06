@@ -9,7 +9,7 @@ import { provideEffects } from "@ngrx/effects";
 import { AuthEffects } from "./app/store/effects/auth.effects";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { environment } from "./environments/environment";
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar } from "@angular/material/snack-bar";
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule } from "@angular/material/snack-bar";
 import { NavigationEffects } from "./app/store/effects/navigation.effects";
 import { httpRequestFailureInterceptor } from "./app/interceptors/http-request-failure.interceptor";
 import { authTokenInterceptor } from "./app/interceptors/auth-token.interceptor";
@@ -18,8 +18,16 @@ import { TicketEffects } from "./app/store/effects/ticket.effects";
 import { AUTH_BASE_URL } from "./app/services/auth-service-proxies";
 import { WEB_API_BASE_URL } from "./app/services/web-api-service-proxies";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
-import { ticketFeatureName } from "./app/store/reducers";
 import { ticketReducer } from "./app/store/reducers/ticket.reducer";
+import { ticketFeatureName } from "./app/store/reducers/index.ticket";
+import { commentFeatureName } from "./app/store/reducers/index.comment";
+import { commentReducer } from "./app/store/reducers/comment.reducer";
+import { CommentEffects } from "./app/store/effects/comment.effects";
+import { MatInputModule } from "@angular/material/input";
+import { CustomMaterialFormsMatcher } from "./app/helpers/CustomMaterialFormsMatcher";
+import { ErrorStateMatcher } from "@angular/material/core";
+import { commonFeatureName, commonReducer } from "./app/store/reducers/common.reducer";
+import { globalLoadingIndicatorInterceptor } from "./app/interceptors/global-loading-indicator.interceptor";
 
 if (environment.production) {
   enableProdMode();
@@ -30,11 +38,14 @@ bootstrapApplication(AppComponent, {
     {provide: AUTH_BASE_URL, useValue: environment.AUTH_BASE_URL},
     {provide: WEB_API_BASE_URL, useValue: environment.WEB_API_BASE_URL},
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3000}},
-    importProvidersFrom(BrowserModule, AppRoutingModule, BrowserAnimationsModule, BrowserAnimationsModule),
-    MatSnackBar,
+    {provide: ErrorStateMatcher, useClass: CustomMaterialFormsMatcher},
+    importProvidersFrom(BrowserModule, AppRoutingModule, BrowserAnimationsModule, BrowserAnimationsModule, MatSnackBarModule, MatInputModule),
     provideRouter(routes),
-    provideStore({ [ticketFeatureName]: ticketReducer }),
-    provideEffects([AuthEffects, NavigationEffects, TicketEffects]),
+    provideStore({[ticketFeatureName]: ticketReducer}),
+    provideStore({[commentFeatureName]: commentReducer}),
+    provideStore({[commonFeatureName]: commonReducer}),
+
+    provideEffects([AuthEffects, NavigationEffects, TicketEffects, CommentEffects]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
@@ -48,6 +59,7 @@ bootstrapApplication(AppComponent, {
         httpRequestFailureInterceptor,
         authTokenInterceptor,
         unauthorizedRequestInterceptor,
+        globalLoadingIndicatorInterceptor,
       ])
     )
   ]

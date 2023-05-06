@@ -1,25 +1,42 @@
 import { Routes } from '@angular/router';
-import { SignInComponent } from "./components/sign-in/sign-in.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
-import { RegisterComponent } from "./components/register/register.component";
-import { ticketFeatureName } from "./store/reducers";
 import { provideState } from "@ngrx/store";
 import { authGuard } from "./guards/auth.guard";
 import { ticketReducer } from "./store/reducers/ticket.reducer";
+import { ticketFeatureName } from "./store/reducers/index.ticket";
+import { commentFeatureName } from "./store/reducers/index.comment";
+import { commentReducer } from "./store/reducers/comment.reducer";
+import { commonFeatureName, commonReducer } from "./store/reducers/common.reducer";
 
 export const DASHBOARD = "dashboard";
 export const SIGN_IN = "sign-in";
 export const REGISTER = "register";
 
 export const routes: Routes = [
-  {path: SIGN_IN, component: SignInComponent},
-  {path: REGISTER, component: RegisterComponent},
   {
-    path: DASHBOARD, component: DashboardComponent, canActivate: [authGuard], providers:
-      [
-        provideState(ticketFeatureName, ticketReducer)
-      ]
-  }
+    path: "",
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then(mod => mod.DashboardComponent),
+    providers: [
+      provideState(ticketFeatureName, ticketReducer),
+      provideState(commentFeatureName, commentReducer),
+      provideState(commonFeatureName, commonReducer),
+    ],
+    //todo check
+    // canActivate: [authGuard]
+  },
+  {
+    path: SIGN_IN,
+    loadComponent: () =>
+      import('./components/sign-in/sign-in.component').then(mod => mod.SignInComponent)
+  },
+  {
+    path: REGISTER,
+    loadComponent: () =>
+      import('./components/register/register.component').then(mod => mod.RegisterComponent)
+  },
+  {path: DASHBOARD,
+    component: DashboardComponent, canActivate: [authGuard]}
 ];
 
 export class AppRoutingModule {
