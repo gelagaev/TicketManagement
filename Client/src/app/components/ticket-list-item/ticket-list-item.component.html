@@ -3,14 +3,18 @@
     <mat-card-title-group>
       <mat-card-subtitle>This Ticket is <b>{{this.ticket.isDone ? 'Closed' : 'Active'}}</b></mat-card-subtitle>
       <mat-card-title>
-        <div *ngIf="!isEdit">Ticket subject: {{ticket.subject}}</div>
-        <div *ngIf="isEdit">
-          <mat-form-field appearance="fill">
-            <mat-label>Subject</mat-label>
-            <input matInput placeholder="Subject" [formControl]="form.controls.subject">
-            <mat-error *ngIf="form.controls.subject.errors" [innerHTML]="form.controls.subject.errors | controlErrors">
-            </mat-error>
-          </mat-form-field>
+        <div [ngSwitch]="isEdit">
+          <div *ngSwitchCase="false">
+            Subject: {{ticket.subject}}
+          </div>
+          <div *ngSwitchCase="true">
+            <mat-form-field appearance="fill">
+              <mat-label>Subject</mat-label>
+              <input matInput placeholder="Subject" [formControl]="form.controls.subject">
+              <mat-error *ngIf="form.controls.subject.errors" [innerHTML]="form.controls.subject.errors | controlErrors">
+              </mat-error>
+            </mat-form-field>
+          </div>
         </div>
       </mat-card-title>
     </mat-card-title-group>
@@ -26,8 +30,8 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div *ngSwitchCase="false">
-        {{ticket.description}}
+      <div class="description" *ngSwitchCase="false">
+        <b>Description: </b>{{ticket.description}}
       </div>
     </div>
 
@@ -39,12 +43,14 @@
             Comments
           </mat-panel-title>
           <mat-panel-description>
-            Click to show/hide tickets comments.
+            Click to show/hide ticket comments.
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <tm-ticket-comment-list *ngIf="isShowComments"></tm-ticket-comment-list>
+        <tm-ticket-comment-list *ngIf="isShowComments" [ticketId]="ticket.id"></tm-ticket-comment-list>
       </mat-expansion-panel>
     </mat-accordion>
+
+    <tm-add-ticket-comment (createComment)="onCreateComment($event)"></tm-add-ticket-comment>
 
   </mat-card-content>
   <mat-card-actions align="end">

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TicketRecord } from "../../services/web-api-service-proxies";
+import { CommentRecord, TicketRecord } from "../../services/web-api-service-proxies";
 import { MatCardModule } from "@angular/material/card";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatListModule } from "@angular/material/list";
@@ -11,21 +11,32 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { TicketCommentListComponent } from "../ticket-comment-list/ticket-comment-list.component";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { TicketActions } from "../../store/actions";
+import { Actions, ofType } from "@ngrx/effects";
+import { CommentActions, TicketActions } from "../../store/actions";
 import { tap } from "rxjs";
+import { AddTicketCommentComponent } from "../add-ticket-comment/add-ticket-comment.component";
+import { Store } from "@ngrx/store";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 
+@UntilDestroy()
 @Component({
   selector: 'tm-ticket-list-item',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatListModule, MatIconModule, MatButtonModule, ControlErrorsPipe, MatFormFieldModule, MatInputModule, MatExpansionModule, TicketCommentListComponent],
+  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatListModule, MatIconModule, MatButtonModule, ControlErrorsPipe, MatFormFieldModule, MatInputModule, MatExpansionModule, TicketCommentListComponent, AddTicketCommentComponent],
   templateUrl: './ticket-list-item.component.html',
   styleUrls: ['./ticket-list-item.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class TicketListItemComponent {
-  constructor(private actions$: Actions,) {
+  constructor(private actions$: Actions, private store: Store<CommentRecord>) {
+    this.actions$.pipe(
+      untilDestroyed(this),
+      ofType(TicketActions.updateTicketSuccess),
+      tap(() => {
+        this.isEdit = false;
+      })
+    ).subscribe();
   }
 
   @Input()
@@ -45,23 +56,31 @@ export class TicketListItemComponent {
     this.isEdit = true;
   }
 
-  ticketUpdateSuccess$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(TicketActions.updateSuccess),
-      tap(() => {
-        this.isEdit = false;
-      })
-    );
-  }, {dispatch: false});
-
   onDelete(): void {
+    if (window.confirm("Delete ticket?")) {
+      this.store.dispatch(
+        TicketActions.deleteTicket({ticketId: this.ticket.id})
+      );
+    }
   }
 
   onSave(): void {
-    this.isEdit = false;
+    this.store.dispatch(
+      TicketActions.updateTicket({
+        subject: this.form.controls.subject.value!,
+        description: this.form.controls.description.value!,
+        id: this.ticket.id,
+      })
+    );
   }
 
   onCancel(): void {
     this.isEdit = false;
+  }
+
+  onCreateComment(commentText: string) {
+    this.store.dispatch(
+      CommentActions.createTicketComment({commentText, ticketId: this.ticket.id})
+    );
   }
 }
