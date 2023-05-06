@@ -78,6 +78,7 @@ services:
     image: ticket-manager/web
     ports:
       - "80:80"
+      - "81:443"
     depends_on:
       - web-api
 
