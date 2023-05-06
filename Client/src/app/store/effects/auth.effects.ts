@@ -31,6 +31,17 @@ export class AuthEffects {
     }
   );
 
+  logout$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(AuthActions.logout),
+        tap(async () => {
+          this.localStorageService.removeAuthToken();
+          await this.navigationService.navigateToSignIn();
+        })
+      );
+    }
+  , {dispatch: false});
+
   register$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(AuthActions.register),
@@ -69,8 +80,7 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.registerResult),
       filter(({success, errors}) => !!success && !errors),
-      tap(async ({success}) =>
-        this.snackBarService.showRegisterSuccess()),
+      tap(async ({success}) => this.snackBarService.showRegisterSuccess()),
       debounceTime(2000),
       tap(async () => await this.navigationService.navigateToSignIn())
     );

@@ -30,7 +30,7 @@ export class ServiceProxy {
 
     /**
      * SignIn
-     * @param body (optional) 
+     * @param body (optional)
      * @return Success
      */
     auth_SignIn(body: SignInRequest | undefined): Observable<SignInResponse> {
@@ -72,7 +72,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = SignInResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -87,7 +87,7 @@ export class ServiceProxy {
 
     /**
      * Register
-     * @param body (optional) 
+     * @param body (optional)
      * @return Success
      */
     auth_Register(body: RegisterRequest | undefined): Observable<RegisterResponse> {
@@ -129,7 +129,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = RegisterResponse.fromJS(resultData200);
             return _observableOf(result200);
