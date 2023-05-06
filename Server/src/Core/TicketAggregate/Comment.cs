@@ -1,16 +1,18 @@
-﻿using Kernel;
+﻿using Ardalis.GuardClauses;
+using Core.UserAggregate;
+using Kernel;
+using Kernel.Interfaces;
 
 namespace Core.TicketAggregate;
 
-public class Comment : EntityBase<Guid>
+public class Comment : EntityBase<Guid>, IAggregateRoot
 {
-  public Guid UserId { get; private set; }
-  public string CommentText { get; private set; }
+  public virtual User Author { get; set; } = default!;
+  public string CommentText { get; set; } = default!;
 
-  public Comment(Guid userId, string commentText)
+  public void UpdateCommentText(string newCommentText)
   {
-    UserId = userId;
-    CommentText = commentText;
+    CommentText = Guard.Against.NullOrEmpty(newCommentText, nameof(newCommentText));
   }
 
   public override string ToString()
