@@ -18,6 +18,10 @@ export class LocalStorageService {
   }
 
   getAuthToken(): string | null {
-    return localStorage.getItem(this.ACCESS_TOKEN_KEY_NAME)
+    return localStorage.getItem(this.ACCESS_TOKEN_KEY_NAME);
+  }
+
+  removeAuthToken(): void {
+    localStorage.removeItem(this.ACCESS_TOKEN_KEY_NAME);
   }
 }
