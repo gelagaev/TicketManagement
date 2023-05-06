@@ -17,6 +17,6 @@ import { Store } from "@ngrx/store";
 export class AppComponent {
   title = 'ticket-management';
 
-  constructor(private store: Store) {
+  constructor() {
   }
 }
