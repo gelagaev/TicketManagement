@@ -9,7 +9,7 @@ using WebApi.Interfaces;
 
 namespace WebApi.Handlers.TicketHandlers;
 
-internal sealed class CreateCommentHandler : IRequestHandler<CreateCommentRequest, ActionResult>
+internal sealed class CreateCommentHandler : IRequestHandler<CreateCommentRequest, ActionResult<CreateCommentResponse>>
 {
   private readonly IRepository<Ticket> _repository;
   private readonly IHttpContextAccessor _contextAccessor;
@@ -24,18 +24,26 @@ internal sealed class CreateCommentHandler : IRequestHandler<CreateCommentReques
     _currentUserProvider = currentUserProvider;
   }
 
-  public async Task<ActionResult> Handle(CreateCommentRequest request, CancellationToken ct)
+  public async Task<ActionResult<CreateCommentResponse>> Handle(CreateCommentRequest request, CancellationToken ct)
   {
     var spec = new TicketByIdWithCommentsSpec(request.TicketId);
     var ticket = await _repository.FirstOrDefaultAsync(spec, ct);
     Guard.Against.Null(ticket, nameof(ticket));
 
-    var userId = _currentUserProvider.GetUserId();
-    var newComment = new Comment(userId, request.CommentText);
+    var user = await _currentUserProvider.GetUserAsync();
+    var newComment = new Comment
+    {
+      Author = user,
+      CommentText = request.CommentText,
+    };
 
-    ticket!.AddComment(newComment);
+    ticket.AddComment(newComment);
     await _repository.UpdateAsync(ticket, ct);
 
-    return new CreatedResult(GetTicketByIdRequest.BuildRoute(request.TicketId), null);
+    var response = new CreateCommentResponse(
+      comment: new CommentRecord(newComment.Id, newComment.CommentText, newComment.Author.Id, user.FullName)
+    );
+
+    return response;
   }
 }
