@@ -1,1 +1,14 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Create Ticket
+        <button type="submit" mat-button color="accent" (click)="onLogout()">Logout</button>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-card>
+      <tm-create-ticket></tm-create-ticket>
+    </mat-card>
+  </mat-expansion-panel>
+</mat-accordion>
 <tm-ticket-list></tm-ticket-list>
