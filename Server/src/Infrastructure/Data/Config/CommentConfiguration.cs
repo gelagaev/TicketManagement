@@ -10,10 +10,15 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
   {
     builder.HasKey(user => user.Id);
     builder.Property(entity => entity.Id).HasDefaultValueSql("newsequentialid()");
-    builder.Property(t => t.CommentText)
+
+    builder.Property(c => c.CommentText)
       .IsRequired()
       .HasMaxLength(1000);
-    builder.Property(t => t.UserId)
-      .IsRequired();
+
+    builder.HasOne(c => c.Author)
+      .WithMany()
+      .OnDelete(DeleteBehavior.Cascade);
+
+    builder.ToTable("Comments", "dbo");
   }
 }

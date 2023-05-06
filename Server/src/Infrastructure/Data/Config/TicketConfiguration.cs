@@ -23,5 +23,20 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
       .HasConversion(
         p => p.Value,
         p => PriorityStatus.FromValue(p));
+
+    builder.Property(t => t.AssignedId)
+    .IsRequired(false);
+
+
+    builder.HasOne(t => t.AssignedTo)
+      .WithMany()
+      .HasForeignKey(t => t.AssignedId)
+      .OnDelete(DeleteBehavior.Restrict);
+
+    builder.HasOne(t => t.Author)
+      .WithMany()
+      .OnDelete(DeleteBehavior.Cascade);;
+
+    builder.ToTable("Tickets", "dbo");
   }
 }
