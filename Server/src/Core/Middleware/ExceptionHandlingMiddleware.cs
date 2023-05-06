@@ -32,7 +32,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
   {
     var response = new
     {
-      status = StatusCodes.Status400BadRequest,
+      status = StatusCodes.Status422UnprocessableEntity,
       detail = exception.Message,
       errors = exception.Errors,
     };
