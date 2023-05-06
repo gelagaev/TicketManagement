@@ -4,8 +4,9 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+#ARG PASSWORD_ENV_SEEDED
+#RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p ${PASSWORD_ENV_SEEDED}
 WORKDIR /src
-#COPY ["TicketManagement.sln", "src/"]
 COPY ["src/WebApi/WebApi.csproj", "src/src/WebApi/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/src/Infrastructure/"]
 COPY ["src/Core/Core.csproj", "src/src/Core/"]
@@ -24,4 +25,5 @@ RUN dotnet publish "src/WebApi/WebApi.csproj" -c Release -o /app/publish /p:UseA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+#COPY --from=build /https/* /https/
 ENTRYPOINT ["dotnet", "WebApi.dll"]

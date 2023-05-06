@@ -35,7 +35,7 @@ internal sealed class TicketPermissionAccessService : ITicketPermissionAccessSer
   {
     var user = await _currentUserProvider.GetUserAsync();
     var ticket = await _repository.GetByIdAsync(ticketId, ct);
-    return ticket != null && (ticket.IsUserAuthor(user) || ticket.IsAssignToUser(user) || user.IsAdministrator);
+    return ticket != null && (ticket.IsUserAuthor(user) || ticket.IsAssignTo(user) || user.IsAdministrator);
   }
 
   public async Task<bool> CurrentUserCanGetAllTickets(CancellationToken ct)

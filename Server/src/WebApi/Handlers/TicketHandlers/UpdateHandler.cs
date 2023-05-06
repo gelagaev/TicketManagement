@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Ardalis.GuardClauses;
 using Core.TicketAggregate;
 using Kernel.Interfaces;
@@ -7,7 +6,7 @@ using WebApi.Endpoints.TicketEndpoints.V1;
 
 namespace WebApi.Handlers.TicketHandlers;
 
-public class UpdateHandler : IRequestHandler<UpdateTicketRequest, UpdateTicketResponse>
+internal sealed class UpdateHandler : IRequestHandler<UpdateTicketRequest, UpdateTicketResponse>
 {
   private readonly IRepository<Ticket> _repository;
 
@@ -24,7 +23,7 @@ public class UpdateHandler : IRequestHandler<UpdateTicketRequest, UpdateTicketRe
     await _repository.UpdateAsync(existingTicket, ct);
 
     var response = new UpdateTicketResponse(
-      ticket: new TicketRecord(existingTicket.Id, existingTicket.Subject, existingTicket.Description)
+      ticket: new TicketRecord(existingTicket.Id, existingTicket.Subject, existingTicket.Description, existingTicket.IsDone)
     );
 
     return response;

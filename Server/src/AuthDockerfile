@@ -4,6 +4,8 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+#ARG PASSWORD_ENV_SEEDED
+#RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p ${PASSWORD_ENV_SEEDED}
 WORKDIR /src
 COPY ["src/Auth/Auth.csproj", "src/src/Auth/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/src/Infrastructure/"]
@@ -23,4 +25,5 @@ RUN dotnet publish "src/Auth/Auth.csproj" -c Release -o /app/publish /p:UseAppHo
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+#COPY --from=build /https/* /https/
 ENTRYPOINT ["dotnet", "Auth.dll"]

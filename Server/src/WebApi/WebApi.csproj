@@ -57,6 +57,12 @@
     <Compile Update="Endpoints\TicketEndpoints\V1\Delete.DeleteProjectRequest.cs">
       <DependentUpon>Delete.cs</DependentUpon>
     </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\GetComments.GetCommentsRequest.cs">
+      <DependentUpon>GetCommentsByTicketId.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\GetComments.GetCommentsResponse.cs">
+      <DependentUpon>GetCommentsByTicketId.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
