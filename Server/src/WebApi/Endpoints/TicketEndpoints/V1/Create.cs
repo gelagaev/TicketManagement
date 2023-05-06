@@ -14,7 +14,7 @@ public class Create : EndpointBaseAsync
 
   public Create(IMediator mediator) => _mediator = mediator;
 
-  [HttpPost("/Tickets")]
+  [HttpPost(CreateTicketRequest.Route)]
   [ApiVersion("1.0")]
   [Authorize]
   [SwaggerOperation(

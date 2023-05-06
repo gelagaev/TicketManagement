@@ -1,14 +1,11 @@
 ﻿namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class CreateTicketResponse
+public sealed class CreateTicketResponse
 {
-  public CreateTicketResponse(Guid id, string subject, string description)
+  public CreateTicketResponse(TicketRecord ticket)
   {
-    Id = id;
-    Subject = subject;
-    Description = description;
+    Ticket = ticket;
   }
-  public Guid Id { get; set; }
-  public string Subject { get; set; }
-  public string Description { get; set; }
+
+  public TicketRecord Ticket { get; private set; }
 }
