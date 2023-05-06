@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Core.TicketAggregate;
 using Core.UserAggregate;
 using Kernel;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,8 @@ public class AppDbContext : IdentityDbContext<User, Role, Guid,
   public override DbSet<UserRole> UserRoles { get; set; } = default!;
   public override DbSet<Role> Roles { get; set; } = default!;
   public override DbSet<IdentityUserClaim<Guid>> UserClaims { get; set; } = default!;
+  public virtual DbSet<Ticket> Tickets { get; set; } = default!;
+  public virtual DbSet<Comment> Comments { get; set; } = default!;
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
