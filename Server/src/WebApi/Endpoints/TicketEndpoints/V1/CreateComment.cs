@@ -8,7 +8,7 @@ namespace WebApi.Endpoints.TicketEndpoints.V1;
 
 public class CreateComment : EndpointBaseAsync
   .WithRequest<CreateCommentRequest>
-  .WithActionResult
+  .WithActionResult<CreateCommentResponse>
 {
   private readonly IMediator _mediator;
 
@@ -23,7 +23,7 @@ public class CreateComment : EndpointBaseAsync
     OperationId = "Ticket.CreateComment",
     Tags = new[] { "TicketEndpoints" })
   ]
-  public override async Task<ActionResult> HandleAsync(
+  public override async Task<ActionResult<CreateCommentResponse>> HandleAsync(
     CreateCommentRequest request,
     CancellationToken ct = new())
   {

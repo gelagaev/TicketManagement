@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class CreateCommentRequest : IRequest<ActionResult>
+public sealed class CreateCommentRequest : IRequest<ActionResult<CreateCommentResponse>>
 {
-  public const string Route = "/Tickets/{TicketId:Guid}/Comments";
+  public const string Route = "api/V{version:apiVersion}/Tickets/{TicketId:Guid}/Comments";
   public static string BuildRoute(Guid ticketId) => Route.Replace("{TicketId:Guid}", ticketId.ToString());
 
   [Required]
