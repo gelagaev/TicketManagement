@@ -1,1 +1,38 @@
-<p>ticket-comment-list-item works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-subtitle>{{comment.authorFullName}}</mat-card-subtitle>
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="card-content" [ngSwitch]="isEditing">
+      <div class="comment-text" *ngSwitchCase="false">
+        {{comment.commentText}}
+      </div>
+      <div *ngSwitchCase="true">
+        <mat-form-field appearance="fill">
+          <mat-label>Comment</mat-label>
+          <textarea matInput placeholder="Comment" [formControl]="form.controls.commentText"></textarea>
+          <mat-error *ngIf="form.controls.commentText.errors" [innerHTML]="form.controls.commentText.errors | controlErrors">
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <div [ngSwitch]="isEditing">
+      <div *ngSwitchCase="false">
+        <button mat-icon-button color="basic" aria-label="Edit comment" (click)="onEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" aria-label="Delete comment" (click)="onDelete()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div *ngSwitchCase="true">
+        <button type="button" mat-button (click)="onSave()">Save</button>
+        <button type="button" mat-button color="warn" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>
