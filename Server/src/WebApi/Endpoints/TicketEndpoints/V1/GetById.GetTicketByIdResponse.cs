@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class GetTicketByIdResponse
+public sealed class GetTicketByIdResponse
 {
   public GetTicketByIdResponse(Guid id, string subject, string description, List<CommentRecord> comments)
   {
