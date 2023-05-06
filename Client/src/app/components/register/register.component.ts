@@ -30,7 +30,10 @@ export class RegisterComponent {
   })
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.store.dispatch(AuthActions.register({
       email: this.form.controls.email.value!,

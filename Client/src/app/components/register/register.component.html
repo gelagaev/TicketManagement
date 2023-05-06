@@ -14,13 +14,13 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>FirstName</mat-label>
-            <input matInput placeholder="sample@domain.com" [formControl]="form.controls.firstName">
+            <input matInput placeholder="FirstName" [formControl]="form.controls.firstName">
             <mat-error *ngIf="form.controls.firstName.errors" [innerHTML]="form.controls.firstName.errors | controlErrors">
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>LastName</mat-label>
-            <input matInput placeholder="sample@domain.com" [formControl]="form.controls.lastName">
+            <input matInput placeholder="LastName" [formControl]="form.controls.lastName">
             <mat-error *ngIf="form.controls.lastName.errors" [innerHTML]="form.controls.lastName.errors | controlErrors">
             </mat-error>
           </mat-form-field>
