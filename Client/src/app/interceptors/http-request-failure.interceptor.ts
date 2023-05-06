@@ -12,14 +12,17 @@ export const httpRequestFailureInterceptor: HttpInterceptorFn = (req, next) => {
   const backendErrorParser = inject(BackendErrorParser);
 
   return next(req).pipe(
-    catchError(error => {
-        if (error instanceof HttpErrorResponse) {
-          if (error.status === 422) {
-            return backendErrorParser.parseErrorResponse(error)
+    catchError(response => {
+        if (response instanceof HttpErrorResponse) {
+          if (response.status === 422) {
+            return backendErrorParser.parseErrorResponse(response)
               .pipe(switchMap(backendError => throwError(() => backendError)));
           }
+          if (response.status === 0 && !navigator.onLine) {
+            return throwError(() => ({code: "OFFLINE_ERROR"} as BackendError));
+          }
         }
-        return throwError(() => ({code: "UNKNOWN_ERROR", detail: null} as BackendError));
+        return throwError(() => ({code: "UNKNOWN_ERROR"} as BackendError));
       }
     )
   );
