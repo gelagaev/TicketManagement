@@ -1,0 +1,13 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+  <mat-card-subtitle>New comment</mat-card-subtitle>
+  <mat-form-field appearance="fill">
+    <mat-label>Comment text</mat-label>
+    <textarea matInput placeholder="Comment text" [formControl]="form.controls.commentText"></textarea>
+    <mat-error *ngIf="form.controls.commentText.errors"
+               [innerHTML]="form.controls.commentText.errors | controlErrors">
+    </mat-error>
+  </mat-form-field>
+  <mat-card-actions align="end">
+    <button type="submit" mat-button color="primary">Add</button>
+  </mat-card-actions>
+</form>
