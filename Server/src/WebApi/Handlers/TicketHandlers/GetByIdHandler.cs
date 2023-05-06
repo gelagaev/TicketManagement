@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Ardalis.GuardClauses;
 using Core.TicketAggregate;
 using Core.TicketAggregate.Specifications;
@@ -8,7 +7,7 @@ using WebApi.Endpoints.TicketEndpoints.V1;
 
 namespace WebApi.Handlers.TicketHandlers;
 
-public class GetByIdHandler : IRequestHandler<GetTicketByIdRequest, GetTicketByIdResponse>
+internal sealed class GetByIdHandler : IRequestHandler<GetTicketByIdRequest, GetTicketByIdResponse>
 {
   private readonly IRepository<Ticket> _repository;
 
@@ -27,7 +26,8 @@ public class GetByIdHandler : IRequestHandler<GetTicketByIdRequest, GetTicketByI
       comments: entity.Comments.Select(
           item => new CommentRecord(item.Id, 
             item.CommentText,
-            item.UserId))
+            item.Author.Id,
+            item.Author.FullName))
         .ToList()
     );
 

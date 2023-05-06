@@ -6,7 +6,7 @@ using WebApi.Endpoints.TicketEndpoints.V1;
 
 namespace WebApi.Handlers.TicketHandlers;
 
-public class DeleteHandler : IRequestHandler<DeleteTicketRequest, ActionResult>
+internal sealed class DeleteHandler : IRequestHandler<DeleteTicketRequest, ActionResult>
 {
   private readonly IRepository<Ticket> _repository;
 
