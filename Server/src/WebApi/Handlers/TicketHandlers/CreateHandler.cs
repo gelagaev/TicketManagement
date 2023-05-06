@@ -19,19 +19,22 @@ internal sealed class CreateHandler : IRequestHandler<CreateTicketRequest, Creat
 
   public async Task<CreateTicketResponse> Handle(CreateTicketRequest request, CancellationToken ct)
   {
+    var user = await _currentUserProvider.GetUserAsync();
     var newTicket = new Ticket(
       request.Subject,
       request.Description,
-      PriorityStatus.Backlog,
-      _currentUserProvider.GetUserId()
+      PriorityStatus.Backlog
     );
+    newTicket.SetAuthor(user);
     var createdItem = await _repository.AddAsync(newTicket, ct);
-    var response = new CreateTicketResponse
-    (
-      id: createdItem.Id,
-      subject: createdItem.Subject,
-      description: createdItem.Description
-    );
+    var response = new CreateTicketResponse(
+      new TicketRecord
+      (
+        createdItem.Id,
+        createdItem.Subject,
+        createdItem.Description,
+        createdItem.IsDone
+      ));
     return response;
   }
 }
