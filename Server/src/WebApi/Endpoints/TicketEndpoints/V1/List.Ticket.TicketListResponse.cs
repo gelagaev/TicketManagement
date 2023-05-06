@@ -1,7 +1,7 @@
 ﻿
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class TicketListResponse
+public sealed class TicketListResponse
 {
   public List<TicketRecord> Tickets { get; set; } = new();
 }

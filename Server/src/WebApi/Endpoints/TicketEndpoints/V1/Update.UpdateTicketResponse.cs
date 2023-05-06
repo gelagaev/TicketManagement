@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class UpdateTicketResponse
+public sealed class UpdateTicketResponse
 {
   public UpdateTicketResponse(TicketRecord ticket)
   {

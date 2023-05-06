@@ -6,7 +6,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class Update : EndpointBaseAsync.WithRequest<UpdateTicketRequest>.WithActionResult<UpdateTicketResponse>
+public class Update : EndpointBaseAsync
+  .WithRequest<UpdateTicketRequest>
+  .WithActionResult<UpdateTicketResponse>
 {
   private readonly IMediator _mediator;
 

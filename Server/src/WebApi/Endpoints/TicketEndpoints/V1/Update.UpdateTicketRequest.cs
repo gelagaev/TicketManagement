@@ -3,9 +3,9 @@ using MediatR;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
-public class UpdateTicketRequest : IRequest<UpdateTicketResponse>
+public sealed class UpdateTicketRequest : IRequest<UpdateTicketResponse>
 {
-  public const string Route = "/Tickets";
+  public const string Route = "api/V{version:apiVersion}$/Tickets";
   [Required]
   public Guid Id { get; set; }
 
