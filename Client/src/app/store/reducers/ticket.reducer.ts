@@ -10,13 +10,23 @@ export interface State extends EntityState<TicketRecord> {
 export const adapter: EntityAdapter<TicketRecord> = createEntityAdapter<TicketRecord>();
 
 export const initialState: State = adapter.getInitialState({
-  selectedTicketId: null,
+  selectedTicketId: null
 });
 
 export const ticketReducer = createReducer(
   initialState,
-  on(TicketActions.loadTicketSuccess, (state, { tickets }) => {
+  on(TicketActions.loadTicketSuccess, (state, {tickets}) => {
     return adapter.setAll(tickets, state);
+  }),
+  on(TicketActions.createTicketSuccess, (state, ticket) => {
+    return adapter.addOne(ticket, state);
+  }),
+  on(TicketActions.deleteTicketSuccess, (state, payload) => {
+    return adapter.removeOne(payload.ticketId, state);
+  }),
+  on(TicketActions.updateTicketSuccess, (state, {update}) => {
+    debugger;
+    return adapter.updateOne(update, state);
   }),
 );
 
