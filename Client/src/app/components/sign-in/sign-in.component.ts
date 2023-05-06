@@ -29,7 +29,10 @@ export class SignInComponent {
   })
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.store.dispatch(AuthActions.signIn({
         email: this.form.controls.email.value!,
         password: this.form.controls.password.value!
