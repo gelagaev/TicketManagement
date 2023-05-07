@@ -87,6 +87,9 @@
     <Compile Update="Endpoints\UserEndpoints\V1\Me.MeResponse.cs">
       <DependentUpon>Me.cs</DependentUpon>
     </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\Close.CloseTicketRequest.cs">
+      <DependentUpon>Close.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
