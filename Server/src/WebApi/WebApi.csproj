@@ -54,7 +54,7 @@
     <Compile Update="Endpoints\TicketEndpoints\V1\CommentRecord.cs">
       <DependentUpon>GetById.cs</DependentUpon>
     </Compile>
-    <Compile Update="Endpoints\TicketEndpoints\V1\Delete.DeleteProjectRequest.cs">
+    <Compile Update="Endpoints\TicketEndpoints\V1\Delete.DeleteTicketRequest.cs">
       <DependentUpon>Delete.cs</DependentUpon>
     </Compile>
     <Compile Update="Endpoints\TicketEndpoints\V1\GetComments.GetCommentsRequest.cs">
@@ -66,7 +66,7 @@
     <Compile Update="Endpoints\TicketEndpoints\V1\CreateComment.CreateCommentResponse.cs">
       <DependentUpon>CreateComment.cs</DependentUpon>
     </Compile>
-    <Compile Update="Endpoints\TicketEndpoints\V1\DeleteComment.DeleteProjectRequest.cs">
+    <Compile Update="Endpoints\TicketEndpoints\V1\DeleteComment.DeleteCommentRequest.cs">
       <DependentUpon>DeleteComment.cs</DependentUpon>
     </Compile>
     <Compile Update="Endpoints\TicketEndpoints\V1\UpdateComment.UpdateTicketRequest.cs">
@@ -80,6 +80,9 @@
     </Compile>
     <Compile Update="Endpoints\UserEndpoints\V1\GetManagersList.GetManagersListCommand.cs">
       <DependentUpon>GetManagersList.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\Assing.AssignTicketRequest.cs">
+      <DependentUpon>Assign.cs</DependentUpon>
     </Compile>
   </ItemGroup>
 
