@@ -58,10 +58,28 @@
       <DependentUpon>Delete.cs</DependentUpon>
     </Compile>
     <Compile Update="Endpoints\TicketEndpoints\V1\GetComments.GetCommentsRequest.cs">
-      <DependentUpon>GetCommentsByTicketId.cs</DependentUpon>
+      <DependentUpon>GetComments.cs</DependentUpon>
     </Compile>
     <Compile Update="Endpoints\TicketEndpoints\V1\GetComments.GetCommentsResponse.cs">
-      <DependentUpon>GetCommentsByTicketId.cs</DependentUpon>
+      <DependentUpon>GetComments.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\CreateComment.CreateCommentResponse.cs">
+      <DependentUpon>CreateComment.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\DeleteComment.DeleteProjectRequest.cs">
+      <DependentUpon>DeleteComment.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\UpdateComment.UpdateTicketRequest.cs">
+      <DependentUpon>UpdateComment.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\TicketEndpoints\V1\UpdateComment.UpdateTicketResponse.cs">
+      <DependentUpon>UpdateComment.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\UserEndpoints\V1\GetManagersList.GetManagersListResponse.cs">
+      <DependentUpon>GetManagersList.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Endpoints\UserEndpoints\V1\GetManagersList.GetManagersListCommand.cs">
+      <DependentUpon>GetManagersList.cs</DependentUpon>
     </Compile>
   </ItemGroup>
 

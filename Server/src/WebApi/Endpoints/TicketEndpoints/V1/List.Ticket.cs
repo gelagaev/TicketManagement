@@ -15,7 +15,7 @@ public class List : EndpointBaseAsync
 
   [Authorize]
   [ApiVersion("1.0")]
-  [HttpGet("/Tickets")]
+  [HttpGet(TicketListCommand.Route)]
   [SwaggerOperation(
     Summary = "Gets a list of all Tickets",
     Description = "Gets a list of all Tickets",
