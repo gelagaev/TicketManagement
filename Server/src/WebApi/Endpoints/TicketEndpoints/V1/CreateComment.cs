@@ -24,7 +24,7 @@ public class CreateComment : EndpointBaseAsync
     Tags = new[] { "TicketEndpoints" })
   ]
   public override async Task<ActionResult<CreateCommentResponse>> HandleAsync(
-    [FromRoute]CreateCommentRequest request,
+    CreateCommentRequest request,
     CancellationToken ct = new())
   {
     var response = await _mediator.Send(request, ct);
