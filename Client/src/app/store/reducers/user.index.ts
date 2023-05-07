@@ -23,8 +23,5 @@ export const selectUserTotal = createSelector(
 
 export const selectUserFullName = (userId: string) => createSelector(
   selectCommentState,
-  (users) => {
-    debugger;
-    return users.entities[userId]?.fullName;
-  }
+  (users) => users.entities[userId]?.fullName
 );

@@ -45,6 +45,7 @@ export class AuthEffects {
     );
   }, {dispatch: false});
 
+
   signInResultFailure$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.signInSuccess),
@@ -56,7 +57,7 @@ export class AuthEffects {
 
   me = createEffect(() => {
       return this.actions$.pipe(
-        ofType(AuthActions.me),
+        ofType(AuthActions.me, AuthActions.signInSuccess),
         exhaustMap(() => {
           return this.webApiServiceProxy.user_Me()
             .pipe(

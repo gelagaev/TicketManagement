@@ -10,11 +10,11 @@ import { MeResponse } from "../../services/web-api-service-proxies";
 
 export const me = createAction('[Auth] Me');
 export const meSuccess = createAction('[Auth] Me Success', props<MeResponse>());
-export const meFailure = createAction('[Auth] Me Success', props<BackendError>());
+export const meFailure = createAction('[Auth] Me Failure', props<BackendError>());
 
 export const signIn = createAction('[Auth] SignIn', props<ISignInRequest>());
 export const signInSuccess = createAction('[Auth] SignIn Success', props<SignInResponse>());
-export const signInFailure = createAction('[Auth] SignIn Success', props<BackendError>());
+export const signInFailure = createAction('[Auth] SignIn Failure', props<BackendError>());
 
 export const register = createAction('[Auth] Register', props<IRegisterRequest>());
 export const registerResult = createAction('[Auth] RegisterSuccess', props<RegisterResponse>());
