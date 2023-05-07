@@ -29,12 +29,11 @@ export class WebApiServiceProxy {
     }
 
     /**
-     * Assign Ticket to Manager
-     * @param ticketId
+     * Assign a Ticket to Manager
      * @param body (optional)
      * @return Success
      */
-    tickets_Assign(ticketId: string, body: string | undefined): Observable<void> {
+    tickets_Assign(ticketId: string, body: AssignTicketRequest | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/V1/Tickets/{TicketId}/Assign";
         if (ticketId === undefined || ticketId === null)
             throw new Error("The parameter 'ticketId' must be defined.");
@@ -67,6 +66,62 @@ export class WebApiServiceProxy {
     }
 
     protected processTickets_Assign(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * Closes a Ticket
+     * @param body (optional)
+     * @return Success
+     */
+    tickets_Close(ticketId: string, body: CloseTicketRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/V1/Tickets/{TicketId}/Close";
+        if (ticketId === undefined || ticketId === null)
+            throw new Error("The parameter 'ticketId' must be defined.");
+        url_ = url_.replace("{TicketId}", encodeURIComponent("" + ticketId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json; x-api-version=1.0",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTickets_Close(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTickets_Close(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTickets_Close(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -129,7 +184,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -181,7 +236,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TicketListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -196,7 +251,6 @@ export class WebApiServiceProxy {
 
     /**
      * Creates a new Comment for a Ticket
-     * @param ticketId
      * @param body (optional)
      * @return Success
      */
@@ -242,7 +296,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -297,7 +351,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetCommentsResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -403,7 +457,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetTicketByIdResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -506,7 +560,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetManagersListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -558,7 +612,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = MeResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -615,7 +669,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -672,7 +726,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -684,6 +738,82 @@ export class WebApiServiceProxy {
         }
         return _observableOf(null as any);
     }
+}
+
+export class AssignTicketRequest implements IAssignTicketRequest {
+    ticketId!: string;
+    managerId!: string | undefined;
+
+    constructor(data?: IAssignTicketRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ticketId = _data["ticketId"];
+            this.managerId = _data["managerId"];
+        }
+    }
+
+    static fromJS(data: any): AssignTicketRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssignTicketRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ticketId"] = this.ticketId;
+        data["managerId"] = this.managerId;
+        return data;
+    }
+}
+
+export interface IAssignTicketRequest {
+    ticketId: string;
+    managerId: string | undefined;
+}
+
+export class CloseTicketRequest implements ICloseTicketRequest {
+    ticketId!: string;
+
+    constructor(data?: ICloseTicketRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ticketId = _data["ticketId"];
+        }
+    }
+
+    static fromJS(data: any): CloseTicketRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CloseTicketRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ticketId"] = this.ticketId;
+        return data;
+    }
+}
+
+export interface ICloseTicketRequest {
+    ticketId: string;
 }
 
 export class CommentRecord implements ICommentRecord {
@@ -1133,10 +1263,12 @@ export interface ITicketListResponse {
 export class TicketRecord implements ITicketRecord {
     id!: string;
     authorId!: string;
+    assignId!: string | undefined;
     subject!: string | undefined;
     description!: string | undefined;
     isDone!: boolean;
     createdDateTime!: Date;
+    assignToFullName!: string | undefined;
 
     constructor(data?: ITicketRecord) {
         if (data) {
@@ -1151,10 +1283,12 @@ export class TicketRecord implements ITicketRecord {
         if (_data) {
             this.id = _data["id"];
             this.authorId = _data["authorId"];
+            this.assignId = _data["assignId"];
             this.subject = _data["subject"];
             this.description = _data["description"];
             this.isDone = _data["isDone"];
             this.createdDateTime = _data["createdDateTime"] ? new Date(_data["createdDateTime"].toString()) : <any>undefined;
+            this.assignToFullName = _data["assignToFullName"];
         }
     }
 
@@ -1169,10 +1303,12 @@ export class TicketRecord implements ITicketRecord {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["authorId"] = this.authorId;
+        data["assignId"] = this.assignId;
         data["subject"] = this.subject;
         data["description"] = this.description;
         data["isDone"] = this.isDone;
         data["createdDateTime"] = this.createdDateTime ? this.createdDateTime.toISOString() : <any>undefined;
+        data["assignToFullName"] = this.assignToFullName;
         return data;
     }
 }
@@ -1180,10 +1316,12 @@ export class TicketRecord implements ITicketRecord {
 export interface ITicketRecord {
     id: string;
     authorId: string;
+    assignId: string | undefined;
     subject: string | undefined;
     description: string | undefined;
     isDone: boolean;
     createdDateTime: Date;
+    assignToFullName: string | undefined;
 }
 
 export class UpdateTicketCommentRequest implements IUpdateTicketCommentRequest {
@@ -1343,7 +1481,7 @@ export interface IUpdateTicketResponse {
 }
 
 export class UserRecord implements IUserRecord {
-    userId!: string;
+    id!: string;
     fullName!: string | undefined;
 
     constructor(data?: IUserRecord) {
@@ -1357,7 +1495,7 @@ export class UserRecord implements IUserRecord {
 
     init(_data?: any) {
         if (_data) {
-            this.userId = _data["userId"];
+            this.id = _data["id"];
             this.fullName = _data["fullName"];
         }
     }
@@ -1371,14 +1509,14 @@ export class UserRecord implements IUserRecord {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userId"] = this.userId;
+        data["id"] = this.id;
         data["fullName"] = this.fullName;
         return data;
     }
 }
 
 export interface IUserRecord {
-    userId: string;
+    id: string;
     fullName: string | undefined;
 }
 
