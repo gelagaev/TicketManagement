@@ -29,6 +29,9 @@ export class TicketCommentListItemComponent {
   @Input()
   isAuthor: boolean | null = false;
 
+  @Input()
+  isTicketDone = false;
+
   form = new FormGroup({
     commentText: new FormControl<string>('', [Validators.required, Validators.maxLength(1000)]),
   })

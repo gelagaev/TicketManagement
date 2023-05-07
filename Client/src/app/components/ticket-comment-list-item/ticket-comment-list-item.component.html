@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title-group>
-      <mat-card-subtitle>{{comment.authorFullName}}</mat-card-subtitle>
+      <mat-card-subtitle>{{comment.authorFullName}} => {{comment.createdDateTime | date: "medium"}}</mat-card-subtitle>
     </mat-card-title-group>
   </mat-card-header>
   <mat-card-content>
@@ -19,7 +19,7 @@
       </div>
     </div>
   </mat-card-content>
-  <mat-card-actions align="end" *ngIf="isAuthor">
+  <mat-card-actions align="end" *ngIf="isAuthor && !isTicketDone">
     <div [ngSwitch]="isEditing">
       <div *ngSwitchCase="false">
         <button mat-icon-button color="basic" aria-label="Edit comment" (click)="onEdit()">
