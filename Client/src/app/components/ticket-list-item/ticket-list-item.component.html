@@ -1,7 +1,8 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title-group>
-      <mat-card-subtitle>This Ticket is <b>{{this.ticket.isDone ? 'Closed' : 'Active'}}</b></mat-card-subtitle>
+      <mat-card-subtitle>This Ticket is <b>{{this.ticket.isDone ? 'Closed' : 'Active'}}</b> Created: {{ticket.createdDateTime | date : "medium"}}</mat-card-subtitle>
+      <mat-card-subtitle *ngIf="!!ticket.assignToFullName && isAuthor">Assigned to <b>{{ticket.assignToFullName}}</b></mat-card-subtitle>
       <mat-card-title>
         <div [ngSwitch]="isEdit">
           <div *ngSwitchCase="false">
@@ -11,7 +12,8 @@
             <mat-form-field appearance="fill">
               <mat-label>Subject</mat-label>
               <input matInput placeholder="Subject" [formControl]="form.controls.subject">
-              <mat-error *ngIf="form.controls.subject.errors" [innerHTML]="form.controls.subject.errors | controlErrors">
+              <mat-error *ngIf="form.controls.subject.errors"
+                         [innerHTML]="form.controls.subject.errors | controlErrors">
               </mat-error>
             </mat-form-field>
           </div>
@@ -35,6 +37,22 @@
       </div>
     </div>
 
+    <div *ngIf="!ticket.isDone">
+      <mat-form-field appearance="fill" *ngIf="isAdmin">
+        <mat-label>Select Manager</mat-label>
+        <mat-select [(value)]="selectedManagerId">
+          <mat-option value="{{-1}}">Not Assigned</mat-option>
+          <mat-option
+            *ngFor="let user of users$ | async; trackBy: trackByFn;"
+            value="{{user.id}}">{{user.fullName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button *ngIf="showSaveAssignButton()" mat-icon-button color="primary" aria-label="Edit comment"
+              (click)="onAssignManager()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+
     <mat-accordion *ngIf="!isEdit">
       <mat-expansion-panel (opened)="isShowComments = true"
                            (closed)="isShowComments = false">
@@ -46,16 +64,19 @@
             Click to show/hide ticket comments.
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <tm-ticket-comment-list *ngIf="isShowComments" [ticketId]="ticket.id"></tm-ticket-comment-list>
+        <tm-ticket-comment-list *ngIf="isShowComments"
+                                [ticketId]="ticket.id"
+                                [isTicketDone]="ticket.isDone">
+        </tm-ticket-comment-list>
       </mat-expansion-panel>
     </mat-accordion>
 
-    <tm-add-ticket-comment (createComment)="onCreateComment($event)"></tm-add-ticket-comment>
-
+    <tm-add-ticket-comment *ngIf="!ticket.isDone" (createComment)="onCreateComment($event)"></tm-add-ticket-comment>
   </mat-card-content>
-  <mat-card-actions align="end" *ngIf="isAuthor">
+  <mat-card-actions align="end" *ngIf="isAuthor && !ticket.isDone">
     <div [ngSwitch]="isEdit">
       <div *ngSwitchCase="false">
+        <button type="button" mat-button (click)="onClose()">Close</button>
         <button type="button" mat-button (click)="onEdit()">Edit</button>
         <button type="button" mat-button color="warn" (click)="onDelete()">Delete</button>
       </div>
