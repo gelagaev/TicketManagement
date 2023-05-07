@@ -1,13 +1,21 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, exhaustMap, map, of } from "rxjs";
+import { catchError, concatMap, exhaustMap, map, of, withLatestFrom } from "rxjs";
 import { BackendError } from "../../interceptors/http-request-failure.interceptor";
 import { Injectable } from "@angular/core";
-import { CreateTicketRequest, UpdateTicketRequest, WebApiServiceProxy } from "../../services/web-api-service-proxies";
+import {
+  AssignTicketRequest,
+  CloseTicketRequest,
+  CreateTicketRequest,
+  UpdateTicketRequest,
+  WebApiServiceProxy
+} from "../../services/web-api-service-proxies";
 import { TicketActions } from "../actions";
+import { select, Store } from "@ngrx/store";
+import { selectUserFullName } from "../reducers/user.index";
 
 @Injectable()
 export class TicketEffects {
-  constructor(private actions$: Actions, private webApiServiceProxy: WebApiServiceProxy,) {
+  constructor(private actions$: Actions, private webApiServiceProxy: WebApiServiceProxy, private store: Store) {
   }
 
   load$ = createEffect(() => {
@@ -65,6 +73,46 @@ export class TicketEffects {
             .pipe(
               map(() => TicketActions.deleteTicketSuccess({ticketId: request.ticketId})),
               catchError((error: BackendError) => of(TicketActions.deleteTicketFailure(error)))
+            );
+        })
+      );
+    }
+  );
+
+  assign$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(TicketActions.assignTicket),
+        concatMap(action => of(action).pipe(withLatestFrom(this.store.pipe(select(selectUserFullName(action.managerId ?? "")))))),
+        exhaustMap(([request, assignToFullName]) =>
+          this.webApiServiceProxy.tickets_Assign(request.ticketId, new AssignTicketRequest(request))
+            .pipe(
+              map(() =>
+                TicketActions.assignTicketSuccess({
+                  id: request.ticketId,
+                  changes: {
+                    assignId: request.managerId,
+                    assignToFullName: assignToFullName
+                  }
+                })),
+              catchError((error: BackendError) => of(TicketActions.assignTicketFailure(error)))
+            ))
+      );
+    }
+  );
+
+  close$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(TicketActions.closeTicket),
+        exhaustMap(request => {
+          return this.webApiServiceProxy.tickets_Close(request.ticketId, new CloseTicketRequest(request))
+            .pipe(
+              map(() => TicketActions.closeTicketSuccess({
+                update: {
+                  id: request.ticketId,
+                  changes: {isDone: true}
+                }
+              })),
+              catchError((error: BackendError) => of(TicketActions.closeTicketFailure(error)))
             );
         })
       );

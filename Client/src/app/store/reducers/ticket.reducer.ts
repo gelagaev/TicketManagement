@@ -25,7 +25,12 @@ export const ticketReducer = createReducer(
     return adapter.removeOne(payload.ticketId, state);
   }),
   on(TicketActions.updateTicketSuccess, (state, {update}) => {
-    debugger;
+    return adapter.updateOne(update, state);
+  }),
+  on(TicketActions.assignTicketSuccess, (state, update) => {
+    return adapter.updateOne(update, state);
+  }),
+  on(TicketActions.closeTicketSuccess, (state, {update}) => {
     return adapter.updateOne(update, state);
   }),
 );

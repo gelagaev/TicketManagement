@@ -25,6 +25,7 @@ export const commonReducer = createReducer(
   on(CommonActions.showLoadingIndicator, state => ({...state, showLoadingIndicator: true})),
   on(CommonActions.hideLoadingIndicator, state => ({...state, showLoadingIndicator: false})),
   on(AuthActions.meSuccess, (state, userInfo) => ({...state, userInfo: {...userInfo}})),
+  on(AuthActions.logout, (state) => ({...state, userInfo: {...initialState.userInfo}})),
 );
 
 export const selectCommonFeature = (state: State) => state;
