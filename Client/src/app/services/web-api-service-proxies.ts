@@ -29,8 +29,64 @@ export class ServiceProxy {
     }
 
     /**
+     * Assign Ticket to Manager
+     * @param body (optional) 
+     * @return Success
+     */
+    tickets_Assign(ticketId: string, body: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/V1/Tickets/{TicketId}/Assign";
+        if (ticketId === undefined || ticketId === null)
+            throw new Error("The parameter 'ticketId' must be defined.");
+        url_ = url_.replace("{TicketId}", encodeURIComponent("" + ticketId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json; x-api-version=1.0",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTickets_Assign(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTickets_Assign(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTickets_Assign(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Creates a new Ticket
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     ticket_Create(body: CreateTicketRequest | undefined): Observable<CreateTicketResponse> {
@@ -72,7 +128,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -86,9 +142,60 @@ export class ServiceProxy {
     }
 
     /**
+     * Gets a list of all Tickets
+     * @return Success
+     */
+    ticket_List(): Observable<TicketListResponse> {
+        let url_ = this.baseUrl + "/api/V1/Tickets";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain; x-api-version=1.0"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTicket_List(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTicket_List(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TicketListResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TicketListResponse>;
+        }));
+    }
+
+    protected processTicket_List(response: HttpResponseBase): Observable<TicketListResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TicketListResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Creates a new Comment for a Ticket
-     * @param ticketId
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     ticket_CreateComment(ticketId: string, body: CreateCommentRequest | undefined): Observable<CreateCommentResponse> {
@@ -133,7 +240,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -188,7 +295,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetCommentsResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -253,6 +360,61 @@ export class ServiceProxy {
     }
 
     /**
+     * Gets a single Ticket
+     * @return Success
+     */
+    ticket_GetById(ticketId: string): Observable<GetTicketByIdResponse> {
+        let url_ = this.baseUrl + "/api/V1/Tickets/{TicketId}";
+        if (ticketId === undefined || ticketId === null)
+            throw new Error("The parameter 'ticketId' must be defined.");
+        url_ = url_.replace("{TicketId}", encodeURIComponent("" + ticketId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain; x-api-version=1.0"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTicket_GetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTicket_GetById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetTicketByIdResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetTicketByIdResponse>;
+        }));
+    }
+
+    protected processTicket_GetById(response: HttpResponseBase): Observable<GetTicketByIdResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTicketByIdResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Deletes a Comment
      * @return Success
      */
@@ -304,42 +466,36 @@ export class ServiceProxy {
     }
 
     /**
-     * Gets a single Ticket
-     * @param ticketId
-     * @param x_api_version (optional)
+     * Gets all Users with Manager role
      * @return Success
      */
-    ticket_GetById(ticketId: string, x_api_version: string | undefined): Observable<GetTicketByIdResponse> {
-        let url_ = this.baseUrl + "/Tickets/{TicketId}";
-        if (ticketId === undefined || ticketId === null)
-            throw new Error("The parameter 'ticketId' must be defined.");
-        url_ = url_.replace("{TicketId}", encodeURIComponent("" + ticketId));
+    user_ManagerList(): Observable<GetManagersListResponse> {
+        let url_ = this.baseUrl + "/api/V1/Users/Managers";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-api-version": x_api_version !== undefined && x_api_version !== null ? "" + x_api_version : "",
                 "Accept": "text/plain; x-api-version=1.0"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTicket_GetById(response_);
+            return this.processUser_ManagerList(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processTicket_GetById(response_ as any);
+                    return this.processUser_ManagerList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<GetTicketByIdResponse>;
+                    return _observableThrow(e) as any as Observable<GetManagersListResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<GetTicketByIdResponse>;
+                return _observableThrow(response_) as any as Observable<GetManagersListResponse>;
         }));
     }
 
-    protected processTicket_GetById(response: HttpResponseBase): Observable<GetTicketByIdResponse> {
+    protected processUser_ManagerList(response: HttpResponseBase): Observable<GetManagersListResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -348,9 +504,9 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetTicketByIdResponse.fromJS(resultData200);
+            result200 = GetManagersListResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -362,38 +518,36 @@ export class ServiceProxy {
     }
 
     /**
-     * Gets a list of all Tickets
-     * @param x_api_version (optional)
+     * Gets User info
      * @return Success
      */
-    ticket_List(x_api_version: string | undefined): Observable<TicketListResponse> {
-        let url_ = this.baseUrl + "/Tickets";
+    user_Me(): Observable<MeResponse> {
+        let url_ = this.baseUrl + "/api/V1/Users/Me";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-api-version": x_api_version !== undefined && x_api_version !== null ? "" + x_api_version : "",
                 "Accept": "text/plain; x-api-version=1.0"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTicket_List(response_);
+            return this.processUser_Me(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processTicket_List(response_ as any);
+                    return this.processUser_Me(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<TicketListResponse>;
+                    return _observableThrow(e) as any as Observable<MeResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<TicketListResponse>;
+                return _observableThrow(response_) as any as Observable<MeResponse>;
         }));
     }
 
-    protected processTicket_List(response: HttpResponseBase): Observable<TicketListResponse> {
+    protected processUser_Me(response: HttpResponseBase): Observable<MeResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -402,9 +556,9 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TicketListResponse.fromJS(resultData200);
+            result200 = MeResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -417,7 +571,7 @@ export class ServiceProxy {
 
     /**
      * Updates a Ticket
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     tickets_Update(body: UpdateTicketRequest | undefined): Observable<UpdateTicketResponse> {
@@ -459,7 +613,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -474,7 +628,7 @@ export class ServiceProxy {
 
     /**
      * Updates a Ticket Comment
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     tickets_CommentUpdate(body: UpdateTicketCommentRequest | undefined): Observable<UpdateTicketCommentResponse> {
@@ -516,7 +670,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -533,8 +687,9 @@ export class ServiceProxy {
 export class CommentRecord implements ICommentRecord {
     id!: string;
     commentText!: string | undefined;
-    userId!: string;
+    authorId!: string;
     authorFullName!: string | undefined;
+    createdDateTime!: Date;
 
     constructor(data?: ICommentRecord) {
         if (data) {
@@ -549,8 +704,9 @@ export class CommentRecord implements ICommentRecord {
         if (_data) {
             this.id = _data["id"];
             this.commentText = _data["commentText"];
-            this.userId = _data["userId"];
+            this.authorId = _data["authorId"];
             this.authorFullName = _data["authorFullName"];
+            this.createdDateTime = _data["createdDateTime"] ? new Date(_data["createdDateTime"].toString()) : <any>undefined;
         }
     }
 
@@ -565,8 +721,9 @@ export class CommentRecord implements ICommentRecord {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["commentText"] = this.commentText;
-        data["userId"] = this.userId;
+        data["authorId"] = this.authorId;
         data["authorFullName"] = this.authorFullName;
+        data["createdDateTime"] = this.createdDateTime ? this.createdDateTime.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -574,8 +731,9 @@ export class CommentRecord implements ICommentRecord {
 export interface ICommentRecord {
     id: string;
     commentText: string | undefined;
-    userId: string;
+    authorId: string;
     authorFullName: string | undefined;
+    createdDateTime: Date;
 }
 
 export class CreateCommentRequest implements ICreateCommentRequest {
@@ -774,6 +932,50 @@ export interface IGetCommentsResponse {
     comments: CommentRecord[] | undefined;
 }
 
+export class GetManagersListResponse implements IGetManagersListResponse {
+    users!: UserRecord[] | undefined;
+
+    constructor(data?: IGetManagersListResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["users"])) {
+                this.users = [] as any;
+                for (let item of _data["users"])
+                    this.users!.push(UserRecord.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetManagersListResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetManagersListResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.users)) {
+            data["users"] = [];
+            for (let item of this.users)
+                data["users"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IGetManagersListResponse {
+    users: UserRecord[] | undefined;
+}
+
 export class GetTicketByIdResponse implements IGetTicketByIdResponse {
     id!: string;
     subject!: string | undefined;
@@ -830,6 +1032,58 @@ export interface IGetTicketByIdResponse {
     comments: CommentRecord[] | undefined;
 }
 
+export class MeResponse implements IMeResponse {
+    id!: string;
+    fullName!: string | undefined;
+    isAdministrator!: boolean;
+    isManager!: boolean;
+    isClient!: boolean;
+
+    constructor(data?: IMeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fullName = _data["fullName"];
+            this.isAdministrator = _data["isAdministrator"];
+            this.isManager = _data["isManager"];
+            this.isClient = _data["isClient"];
+        }
+    }
+
+    static fromJS(data: any): MeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new MeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fullName"] = this.fullName;
+        data["isAdministrator"] = this.isAdministrator;
+        data["isManager"] = this.isManager;
+        data["isClient"] = this.isClient;
+        return data;
+    }
+}
+
+export interface IMeResponse {
+    id: string;
+    fullName: string | undefined;
+    isAdministrator: boolean;
+    isManager: boolean;
+    isClient: boolean;
+}
+
 export class TicketListResponse implements ITicketListResponse {
     tickets!: TicketRecord[] | undefined;
 
@@ -879,6 +1133,7 @@ export class TicketRecord implements ITicketRecord {
     subject!: string | undefined;
     description!: string | undefined;
     isDone!: boolean;
+    createdDateTime!: Date;
 
     constructor(data?: ITicketRecord) {
         if (data) {
@@ -895,6 +1150,7 @@ export class TicketRecord implements ITicketRecord {
             this.subject = _data["subject"];
             this.description = _data["description"];
             this.isDone = _data["isDone"];
+            this.createdDateTime = _data["createdDateTime"] ? new Date(_data["createdDateTime"].toString()) : <any>undefined;
         }
     }
 
@@ -911,6 +1167,7 @@ export class TicketRecord implements ITicketRecord {
         data["subject"] = this.subject;
         data["description"] = this.description;
         data["isDone"] = this.isDone;
+        data["createdDateTime"] = this.createdDateTime ? this.createdDateTime.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -920,6 +1177,7 @@ export interface ITicketRecord {
     subject: string | undefined;
     description: string | undefined;
     isDone: boolean;
+    createdDateTime: Date;
 }
 
 export class UpdateTicketCommentRequest implements IUpdateTicketCommentRequest {
@@ -1076,6 +1334,46 @@ export class UpdateTicketResponse implements IUpdateTicketResponse {
 
 export interface IUpdateTicketResponse {
     ticket: TicketRecord;
+}
+
+export class UserRecord implements IUserRecord {
+    userId!: string;
+    fullName!: string | undefined;
+
+    constructor(data?: IUserRecord) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.fullName = _data["fullName"];
+        }
+    }
+
+    static fromJS(data: any): UserRecord {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRecord();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["fullName"] = this.fullName;
+        return data;
+    }
+}
+
+export interface IUserRecord {
+    userId: string;
+    fullName: string | undefined;
 }
 
 export class SwaggerException extends Error {
