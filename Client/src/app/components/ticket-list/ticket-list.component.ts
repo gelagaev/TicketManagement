@@ -6,7 +6,8 @@ import { TicketRecord } from "../../services/web-api-service-proxies";
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
-import { selectAllTickets } from "../../store/reducers/index.ticket";
+import { isCurrentUserTicketAuthor, selectAllTickets } from "../../store/reducers/index.ticket";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'tm-ticket-list',
@@ -17,7 +18,11 @@ import { selectAllTickets } from "../../store/reducers/index.ticket";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketListComponent {
-  public tickets$ = this.store.pipe(select(selectAllTickets));
+  tickets$ = this.store.pipe(select(selectAllTickets));
+
+  public isAuthor$(ticketId: string): Observable<boolean> {
+    return this.store.pipe(select(isCurrentUserTicketAuthor(ticketId)));
+  }
 
   constructor(private store: Store<TicketRecord>) {
     this.store.dispatch(TicketActions.loadTickets());

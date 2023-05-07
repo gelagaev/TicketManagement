@@ -2,19 +2,19 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, map, of } from "rxjs";
 import { BackendError } from "../../interceptors/http-request-failure.interceptor";
 import { Injectable } from "@angular/core";
-import { CreateTicketRequest, ServiceProxy, UpdateTicketRequest } from "../../services/web-api-service-proxies";
+import { CreateTicketRequest, UpdateTicketRequest, WebApiServiceProxy } from "../../services/web-api-service-proxies";
 import { TicketActions } from "../actions";
 
 @Injectable()
 export class TicketEffects {
-  constructor(private actions$: Actions, private serviceProxy: ServiceProxy,) {
+  constructor(private actions$: Actions, private webApiServiceProxy: WebApiServiceProxy,) {
   }
 
   load$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(TicketActions.loadTickets),
         exhaustMap(() => {
-          return this.serviceProxy.ticket_List()
+          return this.webApiServiceProxy.ticket_List()
             .pipe(
               map(response => TicketActions.loadTicketSuccess({tickets: response.tickets ?? []})),
               catchError((error: BackendError) => of(TicketActions.loadTicketFailure(error)))
@@ -28,7 +28,7 @@ export class TicketEffects {
       return this.actions$.pipe(
         ofType(TicketActions.createTicket),
         exhaustMap(request => {
-          return this.serviceProxy.ticket_Create(new CreateTicketRequest(request))
+          return this.webApiServiceProxy.ticket_Create(new CreateTicketRequest(request))
             .pipe(
               map(response => TicketActions.createTicketSuccess(response.ticket)),
               catchError((error: BackendError) => of(TicketActions.createTicketFailure(error)))
@@ -42,7 +42,7 @@ export class TicketEffects {
       return this.actions$.pipe(
         ofType(TicketActions.updateTicket),
         exhaustMap(request => {
-          return this.serviceProxy.tickets_Update(new UpdateTicketRequest(request))
+          return this.webApiServiceProxy.tickets_Update(new UpdateTicketRequest(request))
             .pipe(
               map(response => TicketActions.updateTicketSuccess({
                 update: {
@@ -61,7 +61,7 @@ export class TicketEffects {
       return this.actions$.pipe(
         ofType(TicketActions.deleteTicket),
         exhaustMap(request => {
-          return this.serviceProxy.tickets_Delete(request.ticketId)
+          return this.webApiServiceProxy.tickets_Delete(request.ticketId)
             .pipe(
               map(() => TicketActions.deleteTicketSuccess({ticketId: request.ticketId})),
               catchError((error: BackendError) => of(TicketActions.deleteTicketFailure(error)))

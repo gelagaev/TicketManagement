@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import * as fromComment from "./comment.reducer";
+import { selectUserInfo } from "./index.common";
 
 export const commentFeatureName = 'comment';
 export const selectCommentState = createFeatureSelector<fromComment.State>(commentFeatureName);
@@ -30,3 +31,8 @@ export const isEditingComment = (checkId: string) => createSelector(
   selectEditingCommentIds,
   selectEditingCommentIds => selectEditingCommentIds.some(id => id === checkId)
 );
+
+export const isCurrentUserCommentAuthor = (commentId: string) =>  createSelector(
+  selectUserInfo,
+  selectCommentEntities,
+  (userInfo, comments) => comments[commentId]?.authorId === userInfo.id);

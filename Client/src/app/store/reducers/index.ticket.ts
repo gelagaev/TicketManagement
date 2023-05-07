@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import * as fromTicket from "./ticket.reducer";
+import { selectUserInfo } from "./index.common";
 
 export const ticketFeatureName = 'ticket';
 export const selectTicketState = createFeatureSelector<fromTicket.State>(ticketFeatureName);
@@ -30,3 +31,8 @@ export const selectCurrentTicket = createSelector(
   selectCurrentTicketId,
   (ticketEntities, ticketId) => ticketId && ticketEntities[ticketId]
 );
+
+export const isCurrentUserTicketAuthor = (ticketId: string) =>  createSelector(
+  selectUserInfo,
+  selectTicketEntities,
+  (userInfo, tickets) => tickets[ticketId]?.authorId === userInfo.id);

@@ -19,7 +19,7 @@
       </div>
     </div>
   </mat-card-content>
-  <mat-card-actions align="end">
+  <mat-card-actions align="end" *ngIf="isAuthor">
     <div [ngSwitch]="isEditing">
       <div *ngSwitchCase="false">
         <button mat-icon-button color="basic" aria-label="Edit comment" (click)="onEdit()">

@@ -42,7 +42,10 @@ export class TicketListItemComponent {
   @Input()
   ticket: TicketRecord = new TicketRecord();
 
-  public isEdit = false;
+  @Input()
+  isAuthor: boolean | null = null;
+
+  isEdit = false;
 
   form = new FormGroup({
     subject: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),

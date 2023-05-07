@@ -18,7 +18,7 @@ export const AUTH_BASE_URL = new InjectionToken<string>('AUTH_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
-export class ServiceProxy {
+export class AuthServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;

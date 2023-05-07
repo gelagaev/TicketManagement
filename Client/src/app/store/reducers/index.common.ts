@@ -12,3 +12,12 @@ export const selectEditingCommentIds = createSelector(
 export const showLoadingIndicator = createSelector(
   selectEditingCommentIds,
   showLoadingIndicator => showLoadingIndicator);
+
+export const selectUserInfo = createSelector(
+  selectCommonState,
+  fromCommon.getUserInfo
+);
+
+export const userInfo = createSelector(
+  selectUserInfo,
+  userInfo => userInfo);

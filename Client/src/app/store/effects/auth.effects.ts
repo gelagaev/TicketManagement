@@ -1,55 +1,33 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { RegisterRequest, ServiceProxy, SignInRequest } from "../../services/auth-service-proxies";
-import { catchError, debounceTime, EMPTY, exhaustMap, filter, map, of, tap } from "rxjs";
+import { catchError, debounceTime, exhaustMap, filter, map, of, tap } from "rxjs";
 import { AuthActions } from "../actions";
 import { Injectable } from "@angular/core";
 import { LocalStorageService } from "../../services/local-storage.service";
 import { SnackBarService } from "../../services/snack-bar.service";
 import { NavigationService } from "../../services/navigation.service";
 import { BackendError } from "../../interceptors/http-request-failure.interceptor";
+import { AuthServiceProxy, RegisterRequest, SignInRequest } from "../../services/auth-service-proxies";
+import { WebApiServiceProxy } from "../../services/web-api-service-proxies";
+
 
 @Injectable()
 export class AuthEffects {
   constructor(private actions$: Actions,
-              private serviceProxy: ServiceProxy,
+              private authServiceProxy: AuthServiceProxy,
               private localStorageService: LocalStorageService,
               private snackBarService: SnackBarService,
-              private navigationService: NavigationService) {
+              private navigationService: NavigationService,
+              private webApiServiceProxy: WebApiServiceProxy) {
   }
 
   signIn$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(AuthActions.signIn),
         exhaustMap((payload) => {
-          return this.serviceProxy.auth_SignIn(new SignInRequest(payload))
+          return this.authServiceProxy.auth_SignIn(new SignInRequest(payload))
             .pipe(
-              map(response => AuthActions.signInResult(response)),
-              catchError(() => EMPTY)
-            );
-        })
-      );
-    }
-  );
-
-  logout$ = createEffect(() => {
-      return this.actions$.pipe(
-        ofType(AuthActions.logout),
-        tap(async () => {
-          this.localStorageService.removeAuthToken();
-          await this.navigationService.navigateToSignIn();
-        })
-      );
-    }
-  , {dispatch: false});
-
-  register$ = createEffect(() => {
-      return this.actions$.pipe(
-        ofType(AuthActions.register),
-        exhaustMap((payload) => {
-          return this.serviceProxy.auth_Register(new RegisterRequest(payload))
-            .pipe(
-              map(response => AuthActions.registerResult(response)),
-              catchError((error: BackendError) => of(AuthActions.registerFailure(error)))
+              map(response => AuthActions.signInSuccess(response)),
+              catchError((error: BackendError) => of(AuthActions.signInFailure(error)))
             );
         })
       );
@@ -58,7 +36,7 @@ export class AuthEffects {
 
   signInResultSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(AuthActions.signInResult),
+      ofType(AuthActions.signInSuccess),
       filter(({success, token}) => !!success && !!token),
       tap(async ({token}) => {
         this.localStorageService.setAuthToken(token!);
@@ -69,12 +47,40 @@ export class AuthEffects {
 
   signInResultFailure$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(AuthActions.signInResult),
+      ofType(AuthActions.signInSuccess),
       filter(({success}) => !success),
       tap(async ({token}) =>
         this.snackBarService.showSignInFailure())
     );
   }, {dispatch: false});
+
+  me = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(AuthActions.me),
+        exhaustMap(() => {
+          return this.webApiServiceProxy.user_Me()
+            .pipe(
+              map(response => AuthActions.meSuccess(response)),
+              catchError((error: BackendError) => of(AuthActions.meFailure(error)))
+            );
+        })
+      );
+    }
+  );
+
+  register$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(AuthActions.register),
+        exhaustMap((payload) => {
+          return this.authServiceProxy.auth_Register(new RegisterRequest(payload))
+            .pipe(
+              map(response => AuthActions.registerResult(response)),
+              catchError((error: BackendError) => of(AuthActions.registerFailure(error)))
+            );
+        })
+      );
+    }
+  );
 
   registerResultSuccess$ = createEffect(() => {
     return this.actions$.pipe(
@@ -91,6 +97,16 @@ export class AuthEffects {
       ofType(AuthActions.registerFailure),
       tap(async (error: BackendError) =>
         this.snackBarService.showRegisterFailure(error)),
+    );
+  }, {dispatch: false});
+
+  logout$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.logout),
+      tap(async () => {
+        this.localStorageService.removeAuthToken();
+        await this.navigationService.navigateToSignIn();
+      })
     );
   }, {dispatch: false});
 }

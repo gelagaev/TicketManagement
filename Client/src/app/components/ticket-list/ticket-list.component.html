@@ -1,3 +1,8 @@
 <div class="container">
-  <tm-ticket-list-item *ngFor="let ticket of tickets$ | async; trackBy: trackByFn;"  [ticket]="ticket"></tm-ticket-list-item>
+  <h3 *ngIf="(tickets$ | async)?.length === 0">No Tickets found</h3>
+  <tm-ticket-list-item
+    *ngFor="let ticket of tickets$ | async; trackBy: trackByFn;"
+    [ticket]="ticket"
+    [isAuthor]="isAuthor$(ticket.id) | async">
+  </tm-ticket-list-item>
 </div>

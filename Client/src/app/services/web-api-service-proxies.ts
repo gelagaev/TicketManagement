@@ -8,9 +8,9 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
-import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
-import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { catchError as _observableCatch, mergeMap as _observableMergeMap } from 'rxjs/operators';
+import { Observable, of as _observableOf, throwError as _observableThrow } from 'rxjs';
+import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
 export const WEB_API_BASE_URL = new InjectionToken<string>('WEB_API_BASE_URL');
@@ -18,7 +18,7 @@ export const WEB_API_BASE_URL = new InjectionToken<string>('WEB_API_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
-export class ServiceProxy {
+export class WebApiServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1132,6 +1132,7 @@ export interface ITicketListResponse {
 
 export class TicketRecord implements ITicketRecord {
     id!: string;
+    authorId!: string;
     subject!: string | undefined;
     description!: string | undefined;
     isDone!: boolean;
@@ -1149,6 +1150,7 @@ export class TicketRecord implements ITicketRecord {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.authorId = _data["authorId"];
             this.subject = _data["subject"];
             this.description = _data["description"];
             this.isDone = _data["isDone"];
@@ -1166,6 +1168,7 @@ export class TicketRecord implements ITicketRecord {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["authorId"] = this.authorId;
         data["subject"] = this.subject;
         data["description"] = this.description;
         data["isDone"] = this.isDone;
@@ -1176,6 +1179,7 @@ export class TicketRecord implements ITicketRecord {
 
 export interface ITicketRecord {
     id: string;
+    authorId: string;
     subject: string | undefined;
     description: string | undefined;
     isDone: boolean;

@@ -26,11 +26,14 @@ export class TicketCommentListItemComponent {
   @Input()
   isEditing = false;
 
-  private get commentId(): string  { return this.comment.id; }
+  @Input()
+  isAuthor: boolean | null = false;
 
   form = new FormGroup({
     commentText: new FormControl<string>('', [Validators.required, Validators.maxLength(1000)]),
   })
+
+  private get commentId(): string  { return this.comment.id; }
 
   constructor(private store: Store<CommentRecord>) {
   }

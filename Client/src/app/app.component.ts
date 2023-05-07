@@ -4,6 +4,9 @@ import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
   GlobalLoadingIndicatorComponent
 } from "./components/global-loading-indicator/global-loading-indicator.component";
+import { LocalStorageService } from "./services/local-storage.service";
+import { Store } from "@ngrx/store";
+import { AuthActions } from "./store/actions";
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,9 @@ import {
 export class AppComponent {
   title = 'ticket-management';
 
-  constructor() {
+  constructor(private store: Store, private localStorageService: LocalStorageService) {
+    if (localStorageService.hasAuthToken()) {
+      this.store.dispatch(AuthActions.me());
+    }
   }
 }

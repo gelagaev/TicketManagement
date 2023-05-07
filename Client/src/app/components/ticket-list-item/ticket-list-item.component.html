@@ -53,7 +53,7 @@
     <tm-add-ticket-comment (createComment)="onCreateComment($event)"></tm-add-ticket-comment>
 
   </mat-card-content>
-  <mat-card-actions align="end">
+  <mat-card-actions align="end" *ngIf="isAuthor">
     <div [ngSwitch]="isEdit">
       <div *ngSwitchCase="false">
         <button type="button" mat-button (click)="onEdit()">Edit</button>

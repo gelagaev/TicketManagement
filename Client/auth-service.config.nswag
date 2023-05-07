@@ -9,7 +9,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "{controller}ServiceProxy",
+      "className": "{controller}AuthServiceProxy",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 4.9,
