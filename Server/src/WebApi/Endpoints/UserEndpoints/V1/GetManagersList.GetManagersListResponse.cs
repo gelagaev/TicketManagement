@@ -11,7 +11,7 @@ public class GetManagersListResponse
   public List<UserRecord> Users { get; private set; }
 }
 
-public record UserRecord(Guid UserId, string FullName);
+public record UserRecord(Guid Id, string FullName);
 
 public static class UserRecordExtensions
 {

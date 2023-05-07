@@ -8,9 +8,12 @@ public static class TicketExtensions
   {
     return new TicketRecord(
       ticket.Id,
+      ticket.AuthorId,
+      ticket.AssignedId,
       ticket.Subject,
       ticket.Description,
       ticket.IsDone,
-      ticket.CreatedDateTime);
+      ticket.CreatedDateTime,
+      ticket.AssignedTo?.FullName);
   }
 }
