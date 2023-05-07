@@ -7,6 +7,7 @@ public sealed class AllTicketsSpec : Specification<Ticket>
   public AllTicketsSpec()
   {
     Query
-      .Include(comment => comment.Author);
+      .Include(ticket => ticket.Author)
+      .Include(ticket => ticket.AssignedTo);
   }
 }

@@ -17,7 +17,7 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   public IEnumerable<Comment> Comments => _comments.AsReadOnly();
   public User Author { get; private set; } = default!;
   public Guid AuthorId { get; private set; }
-  public User AssignedTo { get; private set; } = default!;
+  public User? AssignedTo { get; private set; } = default!;
   public Guid? AssignedId { get; private set; }
 
   public TicketStatus Status => IsDone ? TicketStatus.Complete : TicketStatus.InProgress;
@@ -61,18 +61,23 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
     Description = Guard.Against.NullOrEmpty(newDescription, nameof(newDescription));
   }
 
-  public void AssignToUser(Guid userId)
+  public void AssignToUser(Guid? userId)
   {
     AssignedId = userId;
   }
 
   public bool IsUserAuthor(User user)
   {
-    return user.Id == Author.Id;
+    return user.Id == AuthorId;
   }
 
   public bool IsAssignTo(User user)
   {
-    return user.Id == AssignedTo.Id;
+    return user.Id == AssignedId;
+  }
+
+  public void Close()
+  {
+    IsDone = true;
   }
 }

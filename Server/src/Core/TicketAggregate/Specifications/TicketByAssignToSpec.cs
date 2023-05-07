@@ -8,6 +8,7 @@ public sealed class TicketByAssignToSpec : Specification<Ticket>, ISingleResultS
   {
     Query
       .Include(ticket => ticket.Author)
+      .Include(ticket => ticket.AssignedTo)
       .Where(ticket => ticket.AssignedId == userId);
   }
 }
