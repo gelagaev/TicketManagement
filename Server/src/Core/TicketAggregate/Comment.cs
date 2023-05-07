@@ -9,6 +9,7 @@ public class Comment : EntityBase<Guid>, IAggregateRoot
 {
   public virtual User Author { get; set; } = default!;
   public string CommentText { get; set; } = default!;
+  public DateTime CreatedDateTime { get; } = DateTime.UtcNow;
 
   public void UpdateCommentText(string newCommentText)
   {

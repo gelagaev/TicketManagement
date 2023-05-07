@@ -12,6 +12,7 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   public string Description { get; private set; }
 
   public bool IsDone { get; private set; }
+  public DateTime CreatedDateTime { get; } = DateTime.UtcNow;
   private readonly List<Comment> _comments = new();
   public IEnumerable<Comment> Comments => _comments.AsReadOnly();
   public User Author { get; private set; } = default!;
