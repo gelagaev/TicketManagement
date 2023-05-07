@@ -84,6 +84,9 @@
     <Compile Update="Endpoints\TicketEndpoints\V1\Assing.AssignTicketRequest.cs">
       <DependentUpon>Assign.cs</DependentUpon>
     </Compile>
+    <Compile Update="Endpoints\UserEndpoints\V1\Me.MeResponse.cs">
+      <DependentUpon>Me.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
