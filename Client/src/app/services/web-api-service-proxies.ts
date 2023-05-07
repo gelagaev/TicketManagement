@@ -30,7 +30,8 @@ export class ServiceProxy {
 
     /**
      * Assign Ticket to Manager
-     * @param body (optional) 
+     * @param ticketId
+     * @param body (optional)
      * @return Success
      */
     tickets_Assign(ticketId: string, body: string | undefined): Observable<void> {
@@ -86,7 +87,7 @@ export class ServiceProxy {
 
     /**
      * Creates a new Ticket
-     * @param body (optional) 
+     * @param body (optional)
      * @return Success
      */
     ticket_Create(body: CreateTicketRequest | undefined): Observable<CreateTicketResponse> {
@@ -128,7 +129,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -180,7 +181,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TicketListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -195,7 +196,8 @@ export class ServiceProxy {
 
     /**
      * Creates a new Comment for a Ticket
-     * @param body (optional) 
+     * @param ticketId
+     * @param body (optional)
      * @return Success
      */
     ticket_CreateComment(ticketId: string, body: CreateCommentRequest | undefined): Observable<CreateCommentResponse> {
@@ -240,7 +242,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -295,7 +297,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetCommentsResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -401,7 +403,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetTicketByIdResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -504,7 +506,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetManagersListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -556,7 +558,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = MeResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -571,7 +573,7 @@ export class ServiceProxy {
 
     /**
      * Updates a Ticket
-     * @param body (optional) 
+     * @param body (optional)
      * @return Success
      */
     tickets_Update(body: UpdateTicketRequest | undefined): Observable<UpdateTicketResponse> {
@@ -613,7 +615,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -628,7 +630,7 @@ export class ServiceProxy {
 
     /**
      * Updates a Ticket Comment
-     * @param body (optional) 
+     * @param body (optional)
      * @return Success
      */
     tickets_CommentUpdate(body: UpdateTicketCommentRequest | undefined): Observable<UpdateTicketCommentResponse> {
@@ -670,7 +672,7 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
+            let result200: any;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketCommentResponse.fromJS(resultData200);
             return _observableOf(result200);

@@ -4,7 +4,6 @@ import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
   GlobalLoadingIndicatorComponent
 } from "./components/global-loading-indicator/global-loading-indicator.component";
-import { Store } from "@ngrx/store";
 
 @Component({
   selector: 'app-root',

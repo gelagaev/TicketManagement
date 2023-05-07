@@ -14,9 +14,9 @@ export class TicketEffects {
       return this.actions$.pipe(
         ofType(TicketActions.loadTickets),
         exhaustMap(() => {
-          return this.serviceProxy.ticket_List(undefined) //todo fix
+          return this.serviceProxy.ticket_List()
             .pipe(
-              map(response => TicketActions.loadTicketSuccess({tickets: response.tickets!})), //todo
+              map(response => TicketActions.loadTicketSuccess({tickets: response.tickets ?? []})),
               catchError((error: BackendError) => of(TicketActions.loadTicketFailure(error)))
             );
         })
