@@ -3,6 +3,7 @@
   <tm-ticket-list-item
     *ngFor="let ticket of tickets$ | async; trackBy: trackByFn;"
     [ticket]="ticket"
-    [isAuthor]="isAuthor$(ticket.id) | async">
+    [isAuthor]="isAuthor$(ticket.id) | async"
+    [isAdmin]="isAdmin$() | async">
   </tm-ticket-list-item>
 </div>

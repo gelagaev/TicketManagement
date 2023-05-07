@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { select, Store } from "@ngrx/store";
-import { TicketActions } from "../../store/actions";
+import { TicketActions, UserActions } from "../../store/actions";
 import { TicketRecord } from "../../services/web-api-service-proxies";
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
-import { isCurrentUserTicketAuthor, selectAllTickets } from "../../store/reducers/index.ticket";
+import { isCurrentUserAdmin, isCurrentUserTicketAuthor, selectAllTickets } from "../../store/reducers/index.ticket";
 import { Observable } from "rxjs";
 
 @Component({
@@ -24,8 +24,13 @@ export class TicketListComponent {
     return this.store.pipe(select(isCurrentUserTicketAuthor(ticketId)));
   }
 
+  public isAdmin$(): Observable<boolean> {
+    return this.store.pipe(select(isCurrentUserAdmin));
+  }
+
   constructor(private store: Store<TicketRecord>) {
     this.store.dispatch(TicketActions.loadTickets());
+    this.store.dispatch(UserActions.getUsers());
   }
 
   public trackByFn(index: number, {id}: TicketRecord): string {
