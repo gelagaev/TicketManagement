@@ -19,13 +19,13 @@ public class Assign : EndpointBaseAsync
   [ApiVersion("1.0")]
   [HttpPut(AssignTicketRequest.Route)]
   [SwaggerOperation(
-    Summary = "Assign Ticket to Manager",
-    Description = "Assign Ticket to Manager",
+    Summary = "Assign a Ticket to Manager",
+    Description = "Assign a Ticket to Manager",
     OperationId = "Tickets.Assign",
     Tags = new[] { "TicketEndpoints" })
   ]
   public override async Task<ActionResult> HandleAsync(
-    [FromRoute]AssignTicketRequest ticketRequest,
+    AssignTicketRequest ticketRequest,
     CancellationToken ct = new())
   {
     return await _mediator.Send(ticketRequest, ct);

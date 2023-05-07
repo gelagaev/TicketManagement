@@ -12,5 +12,5 @@ public class AssignTicketRequest : IRequest<ActionResult>
   public Guid TicketId { get; set; }
 
   [FromBody]
-  public Guid ManagerId { get; set; }
+  public Guid? ManagerId { get; set; }
 }
