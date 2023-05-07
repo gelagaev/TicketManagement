@@ -27,14 +27,7 @@ internal sealed class CreateHandler : IRequestHandler<CreateTicketRequest, Creat
     );
     newTicket.SetAuthor(user);
     var createdItem = await _repository.AddAsync(newTicket, ct);
-    var response = new CreateTicketResponse(
-      new TicketRecord
-      (
-        createdItem.Id,
-        createdItem.Subject,
-        createdItem.Description,
-        createdItem.IsDone
-      ));
+    var response = new CreateTicketResponse(createdItem.ToRecord());
     return response;
   }
 }

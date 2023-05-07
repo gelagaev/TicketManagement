@@ -22,9 +22,7 @@ internal sealed class UpdateHandler : IRequestHandler<UpdateTicketRequest, Updat
 
     await _repository.UpdateAsync(existingTicket, ct);
 
-    var response = new UpdateTicketResponse(
-      ticket: new TicketRecord(existingTicket.Id, existingTicket.Subject, existingTicket.Description, existingTicket.IsDone)
-    );
+    var response = new UpdateTicketResponse(existingTicket.ToRecord());
 
     return response;
   }

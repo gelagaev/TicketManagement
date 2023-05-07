@@ -23,12 +23,7 @@ internal sealed class GetByIdHandler : IRequestHandler<GetTicketByIdRequest, Get
       id: entity.Id,
       subject: entity.Subject,
       description: entity.Description,
-      comments: entity.Comments.Select(
-          item => new CommentRecord(item.Id, 
-            item.CommentText,
-            item.Author.Id,
-            item.Author.FullName))
-        .ToList()
+      comments: entity.Comments.Select(item => item.ToRecord()).ToList()
     );
 
     return response;

@@ -2,7 +2,6 @@ using Ardalis.Specification;
 using Core.TicketAggregate;
 using Core.TicketAggregate.Specifications;
 using Core.UserAggregate;
-using Infrastructure.Data;
 using Kernel.Interfaces;
 using MediatR;
 using WebApi.Endpoints.TicketEndpoints.V1;
@@ -29,7 +28,7 @@ internal sealed class ListHandler : IRequestHandler<TicketListCommand, TicketLis
     var response = new TicketListResponse
     {
       Tickets = tickets
-        .Select(ticket => new TicketRecord(ticket.Id, ticket.Subject, ticket.Description, ticket.IsDone))
+        .Select(ticket => ticket.ToRecord())
         .ToList()
     };
 

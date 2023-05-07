@@ -23,9 +23,7 @@ internal sealed class UpdateCommentHandler : IRequestHandler<UpdateTicketComment
 
     await _repository.UpdateAsync(existingComment, ct);
 
-    var response = new UpdateTicketCommentResponse(
-      comment: new CommentRecord(existingComment.Id, existingComment.CommentText, existingComment.Author.Id, existingComment.Author.FullName)
-    );
+    var response = new UpdateTicketCommentResponse(existingComment.ToRecord());
 
     return response;
   }
