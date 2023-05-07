@@ -16,6 +16,7 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   private readonly List<Comment> _comments = new();
   public IEnumerable<Comment> Comments => _comments.AsReadOnly();
   public User Author { get; private set; } = default!;
+  public Guid AuthorId { get; private set; }
   public User AssignedTo { get; private set; } = default!;
   public Guid? AssignedId { get; private set; }
 
@@ -23,11 +24,12 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
 
   public PriorityStatus Priority { get; }
 
-  public Ticket(string subject, string description, PriorityStatus priority)
+  public Ticket(string subject, string description, PriorityStatus priority, Guid authorId)
   {
     Subject = Guard.Against.NullOrEmpty(subject, nameof(subject));
     Description = Guard.Against.NullOrEmpty(description, nameof(description));
     Priority = priority;
+    AuthorId = authorId;
   }
   
   public void MarkComplete()
@@ -59,14 +61,9 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
     Description = Guard.Against.NullOrEmpty(newDescription, nameof(newDescription));
   }
 
-  public void AssignToUser(User user)
+  public void AssignToUser(Guid userId)
   {
-    AssignedTo = user;
-  }
-  
-  public void SetAuthor(User user)
-  {
-    Author = user;
+    AssignedId = userId;
   }
 
   public bool IsUserAuthor(User user)

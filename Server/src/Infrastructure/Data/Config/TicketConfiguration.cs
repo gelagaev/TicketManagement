@@ -35,6 +35,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 
     builder.HasOne(t => t.Author)
       .WithMany()
+      .HasForeignKey(t => t.AuthorId)
       .OnDelete(DeleteBehavior.Cascade);;
 
     builder.ToTable("Tickets", "dbo");

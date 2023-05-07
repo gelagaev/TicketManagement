@@ -14,5 +14,6 @@ public sealed class CreateCommentRequest : IRequest<ActionResult<CreateCommentRe
   public Guid TicketId { get; set; }
 
   [Required]
+  [FromBody]
   public string CommentText { get; set; } = string.Empty;
 }

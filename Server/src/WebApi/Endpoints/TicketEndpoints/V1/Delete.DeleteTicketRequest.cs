@@ -8,5 +8,5 @@ public sealed class DeleteTicketRequest : IRequest<ActionResult>
   public const string Route = "api/V{version:apiVersion}/Tickets/{TicketId:Guid}";
   public static string BuildRoute(Guid ticketId) => Route.Replace("{TicketId:Guid}", ticketId.ToString());
 
-  public Guid TicketId { get; set; }
+  [FromRoute] public Guid TicketId { get; set; }
 }
