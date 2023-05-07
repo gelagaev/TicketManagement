@@ -7,6 +7,8 @@ import { ticketFeatureName } from "./store/reducers/index.ticket";
 import { commentFeatureName } from "./store/reducers/index.comment";
 import { commentReducer } from "./store/reducers/comment.reducer";
 import { commonFeatureName, commonReducer } from "./store/reducers/common.reducer";
+import { userReducer } from "./store/reducers/user.reducer";
+import { userFeatureName } from "./store/reducers/user.index";
 
 export const DASHBOARD = "dashboard";
 export const SIGN_IN = "sign-in";
@@ -21,6 +23,7 @@ export const routes: Routes = [
       provideState(ticketFeatureName, ticketReducer),
       provideState(commentFeatureName, commentReducer),
       provideState(commonFeatureName, commonReducer),
+      provideState(userFeatureName, userReducer),
     ],
     //todo check
     // canActivate: [authGuard]
