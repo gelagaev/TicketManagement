@@ -2,9 +2,9 @@
 using Core.TicketAggregate;
 using Core.UserAggregate;
 using Kernel;
+using Kernel.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Kernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;

@@ -1,4 +1,4 @@
-namespace Auth.Options;
+namespace Infrastructure.Configurations;
 
 public class UserIdentityOptions
 {

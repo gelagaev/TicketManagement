@@ -1,4 +1,3 @@
-using Core;
 using FluentValidation;
 using WebApi.Endpoints.TicketEndpoints.V1;
 using WebApi.Interfaces;

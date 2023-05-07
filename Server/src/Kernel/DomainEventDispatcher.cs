@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Kernel.Interfaces;
+﻿using Kernel.Interfaces;
+using MediatR;
 
 namespace Kernel;
 

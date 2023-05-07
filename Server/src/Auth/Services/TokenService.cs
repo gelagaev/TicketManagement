@@ -4,7 +4,6 @@ using System.Text;
 using Auth.Interfaces;
 using Core.Options;
 using Core.UserAggregate;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

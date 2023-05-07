@@ -1,5 +1,4 @@
-﻿using Auth.Endpoints.Register;
-using Auth.Endpoints.Register.V1;
+﻿using Auth.Endpoints.Register.V1;
 using Auth.Interfaces;
 using Core;
 using FluentValidation;

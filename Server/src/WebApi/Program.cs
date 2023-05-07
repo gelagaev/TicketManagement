@@ -4,13 +4,10 @@ using Autofac.Extensions.DependencyInjection;
 using Core;
 using Core.Configurations;
 using Core.Middleware;
-using Core.UserAggregate;
 using FluentValidation;
 using Infrastructure;
+using Infrastructure.Configurations;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using WebApi;
 using WebApi.Interfaces;
@@ -22,9 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-builder.Services.AddIdentity<User, Role>()
-  .AddEntityFrameworkStores<AppDbContext>()
-  .AddRoleManager<RoleManager<Role>>();
+builder.AddIdentity();
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -38,21 +33,7 @@ builder.Services.AddDbContext(connectionString!);
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddApiVersioning(opt =>
-{
-  opt.DefaultApiVersion = new ApiVersion(1, 0);
-  opt.AssumeDefaultVersionWhenUnspecified = true;
-  opt.ReportApiVersions = true;
-  opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
-    new HeaderApiVersionReader("x-api-version"),
-    new MediaTypeApiVersionReader("x-api-version"));
-});
-
-builder.Services.AddVersionedApiExplorer(setup =>
-{
-  setup.GroupNameFormat = "'V'VVV";
-  setup.SubstituteApiVersionInUrl = true;
-});
+builder.AddApiVersioning();
 
 builder.Services.AddSwaggerGen();
 

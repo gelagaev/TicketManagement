@@ -1,42 +1,22 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Auth;
-using Auth.Options;
 using Auth.Validators;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core;
 using Core.Configurations;
 using Core.Middleware;
-using Core.UserAggregate;
 using FluentValidation;
 using Infrastructure;
+using Infrastructure.Configurations;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-var userIdentityOptions = builder.Configuration
-  .GetSection(nameof(UserIdentityOptions))
-  .Get<UserIdentityOptions>();
-builder.Services.AddIdentity<User, Role>(cfg =>
-  {
-    cfg.User.RequireUniqueEmail = userIdentityOptions.RequireUniqueEmail;
-    cfg.Password.RequireDigit = userIdentityOptions.RequireDigit;
-    cfg.Password.RequiredLength = userIdentityOptions.RequiredLength;
-    cfg.Password.RequiredUniqueChars = userIdentityOptions.RequiredUniqueChars;
-    cfg.Password.RequireLowercase = userIdentityOptions.RequireLowercase;
-    cfg.Password.RequireNonAlphanumeric = userIdentityOptions.RequireNonAlphanumeric;
-    cfg.Password.RequireUppercase = userIdentityOptions.RequireUppercase;
-  })
-  .AddEntityFrameworkStores<AppDbContext>()
-  .AddUserManager<UserManager<User>>()
-  .AddRoleManager<RoleManager<Role>>();
+builder.AddIdentity();
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -53,21 +33,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddApiVersioning(opt =>
-{
-  opt.DefaultApiVersion = new ApiVersion(2, 0);
-  opt.AssumeDefaultVersionWhenUnspecified = true;
-  opt.ReportApiVersions = true;
-  opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
-    new HeaderApiVersionReader("x-api-version"),
-    new MediaTypeApiVersionReader("x-api-version"));
-});
-
-builder.Services.AddVersionedApiExplorer(setup =>
-{
-  setup.GroupNameFormat = "'V'VVV";
-  setup.SubstituteApiVersionInUrl = true;
-});
+builder.AddApiVersioning();
 
 builder.Services.AddSwaggerGen();
 

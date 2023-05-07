@@ -2,12 +2,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.UserAggregate;
+using Infrastructure.Data;
 using Kernel;
 using Kernel.Interfaces;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Data;
 using Module = Autofac.Module;
 
 namespace Infrastructure;
