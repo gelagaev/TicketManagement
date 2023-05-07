@@ -29,10 +29,7 @@ export class CreateTicketComponent {
     actions$.pipe(
       untilDestroyed(this),
       ofType(TicketActions.createTicketSuccess),
-      tap(() => {
-        debugger;
-        this.form.reset();
-      })
+      tap(() => this.form.reset())
     ).subscribe();
   }
 
