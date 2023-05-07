@@ -3,5 +3,6 @@
   *ngFor="let comment of comments$ | async; trackBy: trackByFn;"
   [isEditing]="!!(isCommentEditing(comment.id) | async)"
   [comment]="comment"
-  [isAuthor]="isAuthor(comment.id) | async"></tm-ticket-comment-list-item>
+  [isAuthor]="isAuthor(comment.id) | async"
+  [isTicketDone]="isTicketDone"></tm-ticket-comment-list-item>
 

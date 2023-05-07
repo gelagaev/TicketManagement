@@ -20,6 +20,9 @@ export class TicketCommentListComponent implements OnInit {
   @Input()
   ticketId: string = "";
 
+  @Input()
+  isTicketDone = false;
+
   public comments$ = this.store.pipe(select(selectAllComments));
   isAuthor(commentId: string): Observable<boolean> {
     return this.store.pipe(select(isCurrentUserCommentAuthor(commentId)));

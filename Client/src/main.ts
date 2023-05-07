@@ -28,6 +28,9 @@ import { CustomMaterialFormsMatcher } from "./app/helpers/CustomMaterialFormsMat
 import { ErrorStateMatcher } from "@angular/material/core";
 import { commonFeatureName, commonReducer } from "./app/store/reducers/common.reducer";
 import { globalLoadingIndicatorInterceptor } from "./app/interceptors/global-loading-indicator.interceptor";
+import { userFeatureName } from "./app/store/reducers/user.index";
+import { userReducer } from "./app/store/reducers/user.reducer";
+import { UserEffects } from "./app/store/effects/user.effects";
 
 if (environment.production) {
   enableProdMode();
@@ -43,9 +46,10 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideStore({[ticketFeatureName]: ticketReducer}),
     provideStore({[commentFeatureName]: commentReducer}),
+    provideStore({[userFeatureName]: userReducer}),
     provideStore({[commonFeatureName]: commonReducer}),
 
-    provideEffects([AuthEffects, NavigationEffects, TicketEffects, CommentEffects]),
+    provideEffects([AuthEffects, NavigationEffects, TicketEffects, CommentEffects, UserEffects]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
