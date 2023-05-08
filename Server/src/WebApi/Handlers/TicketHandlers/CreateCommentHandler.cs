@@ -40,7 +40,7 @@ internal sealed class CreateCommentHandler : IRequestHandler<CreateCommentReques
     ticket.AddComment(newComment);
     await _repository.UpdateAsync(ticket, ct);
 
-    var response = new CreateCommentResponse(newComment.ToRecord());
+    var response = new CreateCommentResponse(newComment.ToRecord(ticket.Id));
 
     return response;
   }

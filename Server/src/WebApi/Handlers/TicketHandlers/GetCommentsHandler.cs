@@ -21,7 +21,7 @@ public class GetCommentsHandler : IRequestHandler<GetCommentsRequest, GetComment
     return new GetCommentsResponse
     {
       Comments = ticket.Comments
-        .Select(comment => comment.ToRecord())
+        .Select(comment => comment.ToRecord(ticket.Id))
         .ToList()
     };
   }
