@@ -8,9 +8,9 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import { catchError as _observableCatch, mergeMap as _observableMergeMap } from 'rxjs/operators';
-import { Observable, of as _observableOf, throwError as _observableThrow } from 'rxjs';
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
 export const WEB_API_BASE_URL = new InjectionToken<string>('WEB_API_BASE_URL');
@@ -30,8 +30,7 @@ export class WebApiServiceProxy {
 
     /**
      * Assign a Ticket to Manager
-     * @param ticketId
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     tickets_Assign(ticketId: string, body: AssignTicketRequest | undefined): Observable<void> {
@@ -87,8 +86,7 @@ export class WebApiServiceProxy {
 
     /**
      * Closes a Ticket
-     * @param ticketId
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     tickets_Close(ticketId: string, body: CloseTicketRequest | undefined): Observable<void> {
@@ -144,7 +142,7 @@ export class WebApiServiceProxy {
 
     /**
      * Creates a new Ticket
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     ticket_Create(body: CreateTicketRequest | undefined): Observable<CreateTicketResponse> {
@@ -186,7 +184,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -238,7 +236,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TicketListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -252,9 +250,65 @@ export class WebApiServiceProxy {
     }
 
     /**
+     * Updates a Ticket
+     * @param body (optional) 
+     * @return Success
+     */
+    tickets_Update(body: UpdateTicketRequest | undefined): Observable<UpdateTicketResponse> {
+        let url_ = this.baseUrl + "/api/V1/Tickets";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json; x-api-version=1.0",
+                "Accept": "text/plain; x-api-version=1.0"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTickets_Update(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTickets_Update(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UpdateTicketResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UpdateTicketResponse>;
+        }));
+    }
+
+    protected processTickets_Update(response: HttpResponseBase): Observable<UpdateTicketResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UpdateTicketResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Creates a new Comment for a Ticket
-     * @param ticketId
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     ticket_CreateComment(ticketId: string, body: CreateCommentRequest | undefined): Observable<CreateCommentResponse> {
@@ -299,7 +353,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CreateCommentResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -354,7 +408,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetCommentsResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -460,70 +514,9 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetTicketByIdResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * Updates a Ticket
-     * @param ticketId
-     * @param body (optional)
-     * @return Success
-     */
-    tickets_Update(ticketId: string, body: UpdateTicketRequest | undefined): Observable<UpdateTicketResponse> {
-        let url_ = this.baseUrl + "/api/V1/Tickets/{TicketId}";
-        if (ticketId === undefined || ticketId === null)
-            throw new Error("The parameter 'ticketId' must be defined.");
-        url_ = url_.replace("{TicketId}", encodeURIComponent("" + ticketId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json; x-api-version=1.0",
-                "Accept": "text/plain; x-api-version=1.0"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTickets_Update(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processTickets_Update(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<UpdateTicketResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<UpdateTicketResponse>;
-        }));
-    }
-
-    protected processTickets_Update(response: HttpResponseBase): Observable<UpdateTicketResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UpdateTicketResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -624,7 +617,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = GetManagersListResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -676,7 +669,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = MeResponse.fromJS(resultData200);
             return _observableOf(result200);
@@ -691,7 +684,7 @@ export class WebApiServiceProxy {
 
     /**
      * Updates a Ticket Comment
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     tickets_CommentUpdate(body: UpdateTicketCommentRequest | undefined): Observable<UpdateTicketCommentResponse> {
@@ -733,7 +726,7 @@ export class WebApiServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any;
+            let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UpdateTicketCommentResponse.fromJS(resultData200);
             return _observableOf(result200);

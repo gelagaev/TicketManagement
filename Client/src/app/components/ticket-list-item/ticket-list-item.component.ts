@@ -42,13 +42,14 @@ export class TicketListItemComponent implements AfterViewInit {
     ).subscribe();
   }
 
-  @Input()
-  ticket: TicketRecord = new TicketRecord();
+  @Input({required: true})
+  ticket!: TicketRecord;
 
-  @Input()
-  isAuthor: boolean | null = null;
-  @Input()
-  isAdmin: boolean | null = null;
+  @Input({required: true})
+  isAuthor!: boolean | null;
+
+  @Input({required: true})
+  isAdmin!: boolean | null;
 
   isEdit = false;
 

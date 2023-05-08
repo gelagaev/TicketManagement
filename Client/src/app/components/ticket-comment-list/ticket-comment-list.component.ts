@@ -17,10 +17,10 @@ import { Observable, of } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketCommentListComponent implements OnInit {
-  @Input()
-  ticketId: string = "";
+  @Input({required: true})
+  ticketId!: string;
 
-  @Input()
+  @Input({required: true})
   isTicketDone = false;
 
   public comments$: Observable<CommentRecord[]> = of([]);

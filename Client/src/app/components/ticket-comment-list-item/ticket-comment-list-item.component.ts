@@ -20,16 +20,16 @@ import { MatIconModule } from "@angular/material/icon";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketCommentListItemComponent {
-  @Input()
-  comment: CommentRecord = new CommentRecord();
+  @Input({required: true})
+  comment!: CommentRecord;
 
-  @Input()
+  @Input({required: true})
   isEditing = false;
 
-  @Input()
-  isAuthor: boolean | null = false;
+  @Input({required: true})
+  isAuthor!: boolean | null;
 
-  @Input()
+  @Input({required: true})
   isTicketDone = false;
 
   form = new FormGroup({

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { provideState } from "@ngrx/store";
 import { authGuard } from "./guards/auth.guard";
 import { ticketReducer } from "./store/reducers/ticket.reducer";
@@ -25,8 +24,6 @@ export const routes: Routes = [
       provideState(commonFeatureName, commonReducer),
       provideState(userFeatureName, userReducer),
     ],
-    //todo check
-    // canActivate: [authGuard]
   },
   {
     path: SIGN_IN,
@@ -38,8 +35,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/register/register.component').then(mod => mod.RegisterComponent)
   },
-  {path: DASHBOARD,
-    component: DashboardComponent, canActivate: [authGuard]}
+  {
+    path: DASHBOARD,
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then(mod => mod.DashboardComponent),
+    canActivate: [authGuard]
+  }
 ];
 
 export class AppRoutingModule {
