@@ -1,9 +1,17 @@
 <div class="container">
-  <h3 *ngIf="(tickets$ | async)?.length === 0">No Tickets found</h3>
+  <h3 *ngIf="tickets.length === 0">No Tickets found</h3>
   <tm-ticket-list-item
-    *ngFor="let ticket of tickets$ | async; trackBy: trackByFn;"
+    *ngFor="let ticket of tickets trackBy: trackByFn;"
     [ticket]="ticket"
-    [isAuthor]="isAuthor$(ticket.id) | async"
-    [isAdmin]="isAdmin$() | async">
+    [isAuthor]="isAuthor(ticket)"
+    [isAdmin]="isAdmin"
+    [users]="users"
+    [isEdit]="isEdit"
+    (delete)="onDelete($event)"
+    (save)="onSave($event)"
+    (createComment)="onCreateComment($event)"
+    (assignTicket)="onAssignTicket($event)"
+    (closeTicket)="onCloseTicket($event)"
+    (editTicket)="onEditTicket($event)">
   </tm-ticket-list-item>
 </div>

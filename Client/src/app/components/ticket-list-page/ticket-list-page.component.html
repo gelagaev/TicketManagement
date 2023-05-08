@@ -1,0 +1,13 @@
+<tm-ticket-list
+  [tickets]="(tickets$ | async) ?? []"
+  [isAdmin]="!!(isAdmin$ | async)"
+  [userId]="(userId$ | async) ?? ''"
+  [users]="(users$ | async) ?? []"
+  [isEdit] = "isEdit"
+  (delete)="onDelete($event)"
+  (save)="onSave($event)"
+  (createComment)="onCreateComment($event)"
+  (assignTicket)="onAssignTicket($event)"
+  (closeTicket)="onCloseTicket($event)"
+  (editTicket)="onEditTicket($event)">
+</tm-ticket-list>

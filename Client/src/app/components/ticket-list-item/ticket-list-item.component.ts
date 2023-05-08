@@ -1,6 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CommentRecord, TicketRecord, UserRecord } from "../../services/web-api-service-proxies";
+import {
+  IAssignTicketRequest,
+  ICloseTicketRequest,
+  ICreateCommentRequest,
+  IUpdateTicketRequest,
+  TicketRecord,
+  UserRecord
+} from "../../services/web-api-service-proxies";
 import { MatCardModule } from "@angular/material/card";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatListModule } from "@angular/material/list";
@@ -11,13 +18,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { TicketCommentListComponent } from "../ticket-comment-list/ticket-comment-list.component";
-import { Actions, ofType } from "@ngrx/effects";
-import { CommentActions, TicketActions } from "../../store/actions";
-import { tap } from "rxjs";
 import { AddTicketCommentComponent } from "../add-ticket-comment/add-ticket-comment.component";
-import { select, Store } from "@ngrx/store";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { selectAllUsers } from "../../store/reducers/user.index";
+import { UntilDestroy } from "@ngneat/until-destroy";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 
@@ -32,72 +34,83 @@ import { MatSelectModule } from "@angular/material/select";
 })
 
 export class TicketListItemComponent implements AfterViewInit {
-  constructor(private actions$: Actions, private store: Store<CommentRecord>) {
-    this.actions$.pipe(
-      untilDestroyed(this),
-      ofType(TicketActions.updateTicketSuccess),
-      tap(() => {
-        this.isEdit = false;
-      })
-    ).subscribe();
-  }
-
   @Input({required: true})
   ticket!: TicketRecord;
 
   @Input({required: true})
-  isAuthor!: boolean | null;
+  users: UserRecord[] = [];
 
   @Input({required: true})
-  isAdmin!: boolean | null;
+  isAuthor = false;
 
+  @Input({required: true})
+  isAdmin = false;
+
+  @Input({required: true})
   isEdit = false;
 
-  users$ = this.store.pipe(select(selectAllUsers));
+  @Output()
+  delete = new EventEmitter<string>();
+
+  @Output()
+  save = new EventEmitter<IUpdateTicketRequest>();
+
+  @Output()
+  createComment = new EventEmitter<ICreateCommentRequest>();
+
+  @Output()
+  assignTicket = new EventEmitter<IAssignTicketRequest>();
+
+  @Output()
+  closeTicket = new EventEmitter<ICloseTicketRequest>();
+
+  @Output()
+  editTicket = new EventEmitter<boolean>();
+
+  get ticketId(): string {
+    return this.ticket.id
+  }
 
   form = new FormGroup({
     subject: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl<string>('', [Validators.required, Validators.maxLength(1000)]),
   })
-  public isShowComments = false;
-  selectedManagerId: string = "-1";
 
-  public trackByFn(index: number, {id}: UserRecord): string {
+  isShowComments = false;
+
+  selectedManagerId = "-1";
+
+  trackByFn(index: number, {id}: UserRecord): string {
     return id;
   }
 
   onEdit(): void {
     this.form.controls.subject.setValue(this.ticket.subject ?? "");
     this.form.controls.description.setValue(this.ticket.description ?? "");
-    this.isEdit = true;
+    this.editTicket.emit(true);
   }
 
   onDelete(): void {
-    if (window.confirm("Delete ticket?")) {
-      this.store.dispatch(
-        TicketActions.deleteTicket({ticketId: this.ticket.id})
-      );
-    }
+    this.delete.emit();
   }
 
   onSave(): void {
-    this.store.dispatch(
-      TicketActions.updateTicket({
-        subject: this.form.controls.subject.value!,
-        description: this.form.controls.description.value!,
-        id: this.ticket.id,
-      })
-    );
+    this.save.emit({
+      subject: this.form.controls.subject.value!,
+      description: this.form.controls.description.value!,
+      id: this.ticketId,
+    });
   }
 
   onCancel(): void {
-    this.isEdit = false;
+    this.editTicket.emit(false);
   }
 
   onCreateComment(commentText: string) {
-    this.store.dispatch(
-      CommentActions.createTicketComment({commentText, ticketId: this.ticket.id})
-    );
+    this.createComment.emit({
+      ticketId: this.ticketId,
+      commentText: commentText
+    });
   }
 
   showSaveAssignButton(): boolean {
@@ -109,10 +122,10 @@ export class TicketListItemComponent implements AfterViewInit {
   }
 
   onAssignManager(): void {
-    this.store.dispatch(TicketActions.assignTicket({
+    this.assignTicket.emit({
       managerId: this.selectedManagerId === '-1' ? undefined : this.selectedManagerId,
-      ticketId: this.ticket.id
-    }));
+      ticketId: this.ticketId
+    });
   }
 
   ngAfterViewInit(): void {
@@ -121,12 +134,9 @@ export class TicketListItemComponent implements AfterViewInit {
     }
   }
 
-  protected readonly onclose = onclose;
-
   onClose(): void {
     if (window.confirm("Close ticket?")) {
-      this.store.dispatch(TicketActions.closeTicket({ticketId: this.ticket.id}));
-
+      this.closeTicket.emit({ticketId: this.ticketId})
     }
   }
 }

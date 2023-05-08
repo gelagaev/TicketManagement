@@ -32,11 +32,15 @@ export const selectCurrentTicket = createSelector(
   (ticketEntities, ticketId) => ticketId && ticketEntities[ticketId]
 );
 
-export const isCurrentUserTicketAuthor = (ticketId: string) =>  createSelector(
+export const isCurrentUserTicketAuthor = (ticketId: string) => createSelector(
   selectUserInfo,
   selectTicketEntities,
   (userInfo, tickets) => tickets[ticketId]?.authorId === userInfo.id);
 
-export const isCurrentUserAdmin =  createSelector(
+export const selectCurrentUserId = createSelector(
+  selectUserInfo,
+  userInfo => userInfo.id);
+
+export const isCurrentUserAdmin = createSelector(
   selectUserInfo,
   (userInfo) => userInfo.isAdministrator);

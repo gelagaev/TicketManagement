@@ -37,13 +37,13 @@
       </div>
     </div>
 
-    <div *ngIf="!ticket.isDone">
-      <mat-form-field appearance="fill" *ngIf="isAdmin">
+    <div *ngIf="!ticket.isDone && isAdmin">
+      <mat-form-field appearance="fill">
         <mat-label>Select Manager</mat-label>
         <mat-select [(value)]="selectedManagerId">
           <mat-option value="{{-1}}">Not Assigned</mat-option>
           <mat-option
-            *ngFor="let user of users$ | async; trackBy: trackByFn;"
+            *ngFor="let user of users trackBy: trackByFn;"
             value="{{user.id}}">{{user.fullName}}</mat-option>
         </mat-select>
       </mat-form-field>

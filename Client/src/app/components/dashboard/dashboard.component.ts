@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TicketListComponent } from "../ticket-list/ticket-list.component";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { select, Store } from "@ngrx/store";
@@ -9,11 +8,12 @@ import { SignInComponent } from "../sign-in/sign-in.component";
 import { CreateTicketComponent } from "../create-ticket/create-ticket.component";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { selectUserInfo } from "../../store/reducers/index.common";
+import { TicketListPageComponent } from "../ticket-list-page/ticket-list-page.component";
 
 @Component({
   selector: 'tm-dashboard',
   standalone: true,
-  imports: [CommonModule, TicketListComponent, MatCardModule, MatButtonModule, SignInComponent, CreateTicketComponent, MatExpansionModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, SignInComponent, CreateTicketComponent, MatExpansionModule, TicketListPageComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,

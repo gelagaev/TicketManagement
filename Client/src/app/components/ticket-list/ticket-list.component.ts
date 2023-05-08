@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { select, Store } from "@ngrx/store";
-import { TicketActions, UserActions } from "../../store/actions";
-import { TicketRecord } from "../../services/web-api-service-proxies";
+import {
+  IAssignTicketRequest,
+  ICloseTicketRequest,
+  ICreateCommentRequest,
+  IUpdateTicketRequest,
+  TicketRecord,
+  UserRecord
+} from "../../services/web-api-service-proxies";
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
-import { isCurrentUserAdmin, isCurrentUserTicketAuthor, selectAllTickets } from "../../store/reducers/index.ticket";
-import { Observable } from "rxjs";
 
 @Component({
   selector: 'tm-ticket-list',
@@ -18,22 +21,68 @@ import { Observable } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketListComponent {
-  tickets$ = this.store.pipe(select(selectAllTickets));
+  @Input({required: true})
+  tickets: TicketRecord[] = [];
 
-  public isAuthor$(ticketId: string): Observable<boolean> {
-    return this.store.pipe(select(isCurrentUserTicketAuthor(ticketId)));
-  }
+  @Input({required: true})
+  userId!: string;
 
-  public isAdmin$(): Observable<boolean> {
-    return this.store.pipe(select(isCurrentUserAdmin));
-  }
+  @Input({required: true})
+  isAdmin = false;
 
-  constructor(private store: Store<TicketRecord>) {
-    this.store.dispatch(TicketActions.loadTickets());
-    this.store.dispatch(UserActions.getUsers());
-  }
+  @Input({required: true})
+  isEdit = false;
+
+  @Input({required: true})
+  users: UserRecord[] = [];
+
+  @Output()
+  delete = new EventEmitter<string>();
+
+  @Output()
+  save = new EventEmitter<IUpdateTicketRequest>();
+
+  @Output()
+  createComment = new EventEmitter<ICreateCommentRequest>();
+
+  @Output()
+  assignTicket = new EventEmitter<IAssignTicketRequest>();
+
+  @Output()
+  closeTicket = new EventEmitter<ICloseTicketRequest>();
+
+  @Output()
+  editTicket = new EventEmitter<boolean>();
+
+  isAuthor(ticket: TicketRecord): boolean {
+    return ticket.authorId === this.userId;
+  };
 
   public trackByFn(index: number, {id}: TicketRecord): string {
     return id;
+  }
+
+  onDelete(ticketId: string) {
+    this.delete.emit(ticketId);
+  }
+
+  onSave(request: IUpdateTicketRequest) {
+    this.save.emit(request);
+  }
+
+  onCreateComment(request: ICreateCommentRequest) {
+    this.createComment.emit(request);
+  }
+
+  onAssignTicket(request: IAssignTicketRequest) {
+    this.assignTicket.emit(request);
+  }
+
+  onCloseTicket(request: ICloseTicketRequest) {
+    this.closeTicket.emit(request);
+  }
+
+  onEditTicket(isEdit: boolean) {
+    this.editTicket.emit(isEdit);
   }
 }
