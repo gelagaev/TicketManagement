@@ -29,6 +29,7 @@ export class AddTicketCommentComponent {
       this.form.markAllAsTouched();
       return;
     }
+
     this.createComment.emit(this.form.controls.commentText.value!);
     this.form.reset();
   }

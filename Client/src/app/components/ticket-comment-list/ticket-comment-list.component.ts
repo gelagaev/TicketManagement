@@ -1,12 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { select, Store } from "@ngrx/store";
 import { CommentRecord } from "../../services/web-api-service-proxies";
-import { isCurrentUserCommentAuthor, isEditingComment, selectTicketComments } from "../../store/reducers/index.comment";
-import { CommentActions } from "../../store/actions";
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { TicketCommentListItemComponent } from "../ticket-comment-list-item/ticket-comment-list-item.component";
-import { Observable, of } from "rxjs";
 
 @Component({
   selector: 'tm-ticket-comment-list',
@@ -16,32 +12,34 @@ import { Observable, of } from "rxjs";
   styleUrls: ['./ticket-comment-list.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TicketCommentListComponent implements OnInit {
+export class TicketCommentListComponent {
   @Input({required: true})
   ticketId!: string;
 
   @Input({required: true})
   isTicketDone = false;
 
-  public comments$: Observable<CommentRecord[]> = of([]);
+  @Input({required: true})
+  comments!: CommentRecord[];
 
-  isAuthor(commentId: string): Observable<boolean> {
-    return this.store.pipe(select(isCurrentUserCommentAuthor(commentId)));
+  @Input({required: true})
+  userId!: string;
+
+  @Input({required: true})
+  editingCommentIds!: string[];
+
+  isAuthor(comment: CommentRecord): boolean {
+    return comment.authorId === this.userId;
   }
 
-  constructor(private store: Store<CommentRecord>) {
-  }
-
-  ngOnInit(): void {
-    this.store.dispatch(CommentActions.loadTicketComment({ticketId: this.ticketId}));
-    this.comments$ = this.store.pipe(select(selectTicketComments(this.ticketId)));
+  constructor() {
   }
 
   public trackByFn(index: number, {id}: CommentRecord): string {
     return id;
   }
 
-  public isCommentEditing(id: string) {
-    return this.store.pipe(select(isEditingComment(id)))
+  public isCommentEditing(commentId: string): boolean {
+    return this.editingCommentIds.some(id => id === commentId);
   }
 }

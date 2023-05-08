@@ -64,10 +64,10 @@
             Click to show/hide ticket comments.
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <tm-ticket-comment-list *ngIf="isShowComments"
-                                [ticketId]="ticket.id"
-                                [isTicketDone]="ticket.isDone">
-        </tm-ticket-comment-list>
+        <tm-ticket-comment-list-page *ngIf="isShowComments"
+                                     [ticketId]="ticket.id"
+                                     [isTicketDone]="ticket.isDone">
+        </tm-ticket-comment-list-page>
       </mat-expansion-panel>
     </mat-accordion>
 

@@ -22,12 +22,13 @@ import { AddTicketCommentComponent } from "../add-ticket-comment/add-ticket-comm
 import { UntilDestroy } from "@ngneat/until-destroy";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
+import { TicketCommentListPageComponent } from "../ticket-comment-list-page/ticket-comment-list-page.component";
 
 @UntilDestroy()
 @Component({
   selector: 'tm-ticket-list-item',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatListModule, MatIconModule, MatButtonModule, ControlErrorsPipe, MatFormFieldModule, MatInputModule, MatExpansionModule, TicketCommentListComponent, AddTicketCommentComponent, MatOptionModule, MatSelectModule],
+  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatListModule, MatIconModule, MatButtonModule, ControlErrorsPipe, MatFormFieldModule, MatInputModule, MatExpansionModule, TicketCommentListComponent, AddTicketCommentComponent, MatOptionModule, MatSelectModule, TicketCommentListPageComponent],
   templateUrl: './ticket-list-item.component.html',
   styleUrls: ['./ticket-list-item.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,7 +98,7 @@ export class TicketListItemComponent implements OnInit {
   }
 
   onDelete(): void {
-    this.delete.emit();
+    this.delete.emit(this.ticketId);
   }
 
   onSave(): void {

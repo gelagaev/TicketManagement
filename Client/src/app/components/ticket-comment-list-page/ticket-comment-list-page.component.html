@@ -1,0 +1,7 @@
+<tm-ticket-comment-list
+  [ticketId]="ticketId"
+  [isTicketDone]="isTicketDone"
+  [comments]="(comments$ | async) ?? []"
+  [userId]="(userId$ | async) ?? ''"
+  [editingCommentIds]="(editingCommentsIds$ | async) ?? []">
+</tm-ticket-comment-list>

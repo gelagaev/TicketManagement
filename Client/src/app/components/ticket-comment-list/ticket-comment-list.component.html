@@ -1,8 +1,8 @@
-<h3 *ngIf="(comments$ | async)?.length === 0">No Comments found</h3>
+<h3 *ngIf="comments.length === 0">No Comments found</h3>
 <tm-ticket-comment-list-item
-  *ngFor="let comment of comments$ | async; trackBy: trackByFn;"
-  [isEditing]="!!(isCommentEditing(comment.id) | async)"
+  *ngFor="let comment of comments; trackBy: trackByFn;"
+  [isEditing]="isCommentEditing(comment.id)"
   [comment]="comment"
-  [isAuthor]="isAuthor(comment.id) | async"
+  [isAuthor]="isAuthor(comment)"
   [isTicketDone]="isTicketDone"></tm-ticket-comment-list-item>
 
