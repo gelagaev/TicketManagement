@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { select, Store } from "@ngrx/store";
-import { AuthActions } from "../../store/actions";
+import { AuthActions, TicketActions } from "../../store/actions";
 import { SignInComponent } from "../sign-in/sign-in.component";
 import { CreateTicketComponent } from "../create-ticket/create-ticket.component";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { selectUserInfo } from "../../store/reducers/index.common";
 import { TicketListPageComponent } from "../ticket-list-page/ticket-list-page.component";
+import { ICreateTicketRequest } from "../../services/web-api-service-proxies";
+import { Actions, ofType } from "@ngrx/effects";
 
 @Component({
   selector: 'tm-dashboard',
@@ -19,12 +21,20 @@ import { TicketListPageComponent } from "../ticket-list-page/ticket-list-page.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  public userInfo$ = this.store.pipe(select(selectUserInfo));
+  userInfo$ = this.store.pipe(select(selectUserInfo));
 
-  constructor(private store: Store) {
+  createTicketSuccess$ = this.actions$.pipe(
+    ofType(TicketActions.createTicketSuccess),
+  );
+
+  constructor(private store: Store, private actions$: Actions) {
   }
 
   onLogout(): void {
     this.store.dispatch(AuthActions.logout());
+  }
+
+  onSubmit(request: ICreateTicketRequest) {
+    this.store.dispatch(TicketActions.createTicket(request));
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlErrorsPipe } from "../../pipes/control-errors.pipe";
 import { MatButtonModule } from "@angular/material/button";
@@ -8,11 +8,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { Store } from "@ngrx/store";
-import { TicketRecord } from "../../services/web-api-service-proxies";
-import { TicketActions } from "../../store/actions";
-import { Actions, ofType } from "@ngrx/effects";
-import { tap } from "rxjs";
+import { ICreateTicketRequest } from "../../services/web-api-service-proxies";
+import { Observable, tap } from "rxjs";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 
 @UntilDestroy()
@@ -24,13 +21,18 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
   styleUrls: ['./create-ticket.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateTicketComponent {
-  constructor(private store: Store<TicketRecord>, private actions$: Actions) {
-    actions$.pipe(
+export class CreateTicketComponent implements OnInit {
+  @Input({required: true})
+  createTicketSuccess$!: Observable<any>;
+
+  @Output()
+  submit = new EventEmitter<ICreateTicketRequest>();
+
+  ngOnInit(): void {
+    this.createTicketSuccess$.pipe(
       untilDestroyed(this),
-      ofType(TicketActions.createTicketSuccess),
-      tap(() => this.form.reset())
-    ).subscribe();
+      tap(() => this.form.reset()))
+      .subscribe();
   }
 
   form = new FormGroup({
@@ -43,9 +45,10 @@ export class CreateTicketComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.store.dispatch(TicketActions.createTicket({
+
+    this.submit.emit({
       subject: this.form.controls.subject.value!,
       description: this.form.controls.description.value!,
-    }))
+    });
   }
 }

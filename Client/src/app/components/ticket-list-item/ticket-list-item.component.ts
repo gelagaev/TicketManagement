@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IAssignTicketRequest,
@@ -33,7 +33,7 @@ import { MatSelectModule } from "@angular/material/select";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class TicketListItemComponent implements AfterViewInit {
+export class TicketListItemComponent implements OnInit {
   @Input({required: true})
   ticket!: TicketRecord;
 
@@ -66,6 +66,12 @@ export class TicketListItemComponent implements AfterViewInit {
 
   @Output()
   editTicket = new EventEmitter<boolean>();
+
+  ngOnInit(): void {
+    if (this.ticket.assignId) {
+      this.selectedManagerId = this.ticket.assignId;
+    }
+  }
 
   get ticketId(): string {
     return this.ticket.id
@@ -126,12 +132,6 @@ export class TicketListItemComponent implements AfterViewInit {
       managerId: this.selectedManagerId === '-1' ? undefined : this.selectedManagerId,
       ticketId: this.ticketId
     });
-  }
-
-  ngAfterViewInit(): void {
-    if (this.ticket.assignId) {
-      this.selectedManagerId = this.ticket.assignId;
-    }
   }
 
   onClose(): void {
