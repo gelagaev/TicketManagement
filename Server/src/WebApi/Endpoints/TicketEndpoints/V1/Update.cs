@@ -18,14 +18,14 @@ public class Update : EndpointBaseAsync
   [ApiVersion("1.0")]
   [HttpPut(UpdateTicketRequest.Route)]
   [SwaggerOperation(
-      Summary = "Updates a Ticket",
-      Description = "Updates a Ticket. Only supports changing the subject and description.",
-      OperationId = "Tickets.Update",
-      Tags = new[] { "TicketEndpoints" })
+    Summary = "Updates a Ticket",
+    Description = "Updates a Ticket. Only supports changing the subject and description.",
+    OperationId = "Tickets.Update",
+    Tags = new[] { "TicketEndpoints" })
   ]
   public override async Task<ActionResult<UpdateTicketResponse>> HandleAsync(
     UpdateTicketRequest request,
-      CancellationToken ct = new ())
+    CancellationToken ct = new())
   {
     var response = await _mediator.Send(request, ct);
 

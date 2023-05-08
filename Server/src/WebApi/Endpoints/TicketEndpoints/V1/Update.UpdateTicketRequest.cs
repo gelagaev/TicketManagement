@@ -6,9 +6,8 @@ namespace WebApi.Endpoints.TicketEndpoints.V1;
 
 public sealed class UpdateTicketRequest : IRequest<UpdateTicketResponse>
 {
-  public const string Route = "api/V{version:apiVersion}/Tickets/{TicketId:Guid}";
+  public const string Route = "api/V{version:apiVersion}/Tickets";
   [Required]
-  [FromRoute]
   public Guid Id { get; set; }
 
   [Required]
