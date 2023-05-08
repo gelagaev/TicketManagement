@@ -50,7 +50,7 @@ export class TicketEffects {
       return this.actions$.pipe(
         ofType(TicketActions.updateTicket),
         exhaustMap(request => {
-          return this.webApiServiceProxy.tickets_Update(new UpdateTicketRequest(request))
+          return this.webApiServiceProxy.tickets_Update(request.id,new UpdateTicketRequest(request))
             .pipe(
               map(response => TicketActions.updateTicketSuccess({
                 update: {

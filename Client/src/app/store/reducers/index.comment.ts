@@ -17,6 +17,11 @@ export const selectAllComments = createSelector(
   selectCommentState,
   fromComment.selectAllComments
 );
+
+export const selectTicketComments = (ticketId: string) => createSelector(
+  selectAllComments,
+  comments => comments.filter(comment => comment.ticketId === ticketId)
+);
 export const selectCommentTotal = createSelector(
   selectCommentState,
   fromComment.selectCommentTotal
@@ -24,7 +29,7 @@ export const selectCommentTotal = createSelector(
 
 export const selectEditingCommentIds = createSelector(
   selectCommentState,
-    fromComment.getEditingCommentIds
+  fromComment.getEditingCommentIds
 );
 
 export const isEditingComment = (checkId: string) => createSelector(
@@ -32,7 +37,7 @@ export const isEditingComment = (checkId: string) => createSelector(
   selectEditingCommentIds => selectEditingCommentIds.some(id => id === checkId)
 );
 
-export const isCurrentUserCommentAuthor = (commentId: string) =>  createSelector(
+export const isCurrentUserCommentAuthor = (commentId: string) => createSelector(
   selectUserInfo,
   selectCommentEntities,
   (userInfo, comments) => comments[commentId]?.authorId === userInfo.id);
