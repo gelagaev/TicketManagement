@@ -27,8 +27,8 @@ public static class SeedData
         Id = Guid.Parse("57B803B0-D0A6-4B88-AF1F-C51E442EF419"),
         IsActive = true,
         Email = adminEmail,
-        FirstName = "Admin",
-        LastName = "Test",
+        FirstName = "Test",
+        LastName = "Admin",
         UserName = adminEmail
       };
       await userManager.CreateAsync(admin, "&&&&&&");
@@ -42,8 +42,8 @@ public static class SeedData
         Id = Guid.Parse("CE20CEDA-D36C-4B14-A16B-463B471C6CA9"),
         IsActive = true,
         Email = managerEmail,
-        FirstName = "Manager",
-        LastName = "Test",
+        FirstName = "Test",
+        LastName = "Manager",
         UserName = managerEmail
       };
       await userManager.CreateAsync(manager, "&&&&&&");
