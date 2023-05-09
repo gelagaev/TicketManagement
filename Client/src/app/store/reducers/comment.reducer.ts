@@ -23,9 +23,11 @@ export const commentReducer = createReducer(
     adapter.addOne(ticket, state)),
   on(CommentActions.updateTicketCommentSuccess, (state, { update }) =>
     adapter.updateOne(update, state)),
-  on(CommentActions.editEditTicketComment, (state, {commentId}) => ({
+  on(CommentActions.editTicketComment, (state, edit) => ({
     ...state,
-    editingIds: [...state.editingIds, commentId]
+    editingIds: edit.isEdit ?
+      [...state.editingIds, edit.id] :
+      [...state.editingIds.filter(id => id !== edit.id)]
   })),
   on(CommentActions.updateTicketCommentSuccess, (state, response) => ({
       ...state,

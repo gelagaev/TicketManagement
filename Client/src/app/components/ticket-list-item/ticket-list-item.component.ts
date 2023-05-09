@@ -96,7 +96,7 @@ export class TicketListItemComponent implements OnInit {
     this.form.controls.subject.setValue(this.ticket.subject ?? "");
     this.form.controls.description.setValue(this.ticket.description ?? "");
     this.edit.emit({
-      ticketId: this.ticketId,
+      id: this.ticketId,
       isEdit: true,
     });
   }
@@ -115,7 +115,7 @@ export class TicketListItemComponent implements OnInit {
 
   onCancel(): void {
     this.edit.emit({
-      ticketId: this.ticketId,
+      id: this.ticketId,
       isEdit: false,
     });
   }

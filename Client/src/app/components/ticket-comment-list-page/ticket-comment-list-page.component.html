@@ -3,5 +3,8 @@
   [isTicketDone]="isTicketDone"
   [comments]="(comments$ | async) ?? []"
   [userId]="(userId$ | async) ?? ''"
-  [editingCommentIds]="(editingCommentsIds$ | async) ?? []">
+  [editingCommentIds]="(editingCommentsIds$ | async) ?? []"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)"
+  (save)="onSave($event)">
 </tm-ticket-comment-list>

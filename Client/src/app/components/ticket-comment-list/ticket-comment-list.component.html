@@ -4,5 +4,9 @@
   [isEditing]="isCommentEditing(comment.id)"
   [comment]="comment"
   [isAuthor]="isAuthor(comment)"
-  [isTicketDone]="isTicketDone"></tm-ticket-comment-list-item>
+  [isTicketDone]="isTicketDone"
+  (save)="onSave($event)"
+  (delete)="onDelete($event)"
+  (edit)="onEdit($event)">
+</tm-ticket-comment-list-item>
 

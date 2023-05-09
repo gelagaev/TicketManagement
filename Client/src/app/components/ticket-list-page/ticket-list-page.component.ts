@@ -19,7 +19,6 @@ import {
 } from "../../store/reducers/index.ticket";
 import { Observable } from "rxjs";
 import { selectAllUsers } from "../../store/reducers/user.index";
-import { Actions } from "@ngrx/effects";
 import { UntilDestroy } from "@ngneat/until-destroy";
 import { Edit } from "../../models/edit.model";
 
@@ -36,7 +35,7 @@ export class TicketListPageComponent {
   tickets$ = this.store.pipe(select(selectAllTickets));
   editingTicketIds$ = this.store.pipe(select(selectEditingTicketIds));
 
-  constructor(private store: Store<TicketRecord>, private actions$: Actions) {
+  constructor(private store: Store<TicketRecord>) {
     this.store.dispatch(TicketActions.loadTickets());
     this.store.dispatch(UserActions.getUsers());
   }

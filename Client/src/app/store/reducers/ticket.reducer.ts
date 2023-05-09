@@ -41,8 +41,8 @@ export const ticketReducer = createReducer(
     ...state,
     editingIds:
       edit.isEdit ?
-        [...state.editingIds, edit.ticketId] :
-        [...state.editingIds.filter(id => id !== edit.ticketId)]
+        [...state.editingIds, edit.id] :
+        [...state.editingIds.filter(id => id !== edit.id)]
   })),
 );
 
