@@ -16,7 +16,7 @@ public static class SwaggerConfig
   /// <param name="app">Application</param>
   public static void UseSwagger(this WebApplication app)
   {
-    if (!app.Environment.IsDevelopment())
+    if (app.Environment.IsProduction() )
     {
       return;
     }

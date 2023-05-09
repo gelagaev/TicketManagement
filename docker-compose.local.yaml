@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.4'
 services:
   database:
     environment:
@@ -12,6 +12,12 @@ services:
       - type: volume
         source: data
         target: /var/opt/mssql
+    healthcheck:
+      test:  /opt/mssql-tools/bin/sqlcmd -U sa -P Qwertyu7! -Q 'select 1' -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -27,11 +33,8 @@ services:
 
   web-api:
     environment:
-#      - PASSWORD_ENV_SEEDED="some.long.password" #this password uses for HTTPS certificate generation inside image
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=https://+:443;http://+:80
-#      - ASPNETCORE_Kestrel__Certificates__Default__Password=${PASSWORD_ENV_SEEDED}
-#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${PASSWORD_ENV_SEEDED}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
@@ -39,16 +42,16 @@ services:
     build:
       context: ./Server
       dockerfile: ./src/WebApiDockerfile
-#      args:
-#        - PASSWORD_ENV_SEEDED=${PASSWORD_ENV_SEEDED}
     image: ticket-manager/web-api
     ports:
       - "8080:80"
       - "7116:443"
     depends_on:
-      - database
-      - auth
-        
+      auth:
+        condition: service_started 
+      database:
+        condition: service_healthy
+
   auth:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
@@ -57,19 +60,16 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ~/.aspnet/https:/https:ro
-#      - ASPNETCORE_Kestrel__Certificates__Default__Password=${PASSWORD_ENV_SEEDED}
-#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     build:
       context: ./Server
       dockerfile: ./src/AuthDockerfile
-#      args:
-#        - PASSWORD_ENV_SEEDED=${PASSWORD_ENV_SEEDED}
     image: ticket-manager/auth
     ports:
       - "8081:80"
       - "7058:443"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   web:
     build:
@@ -77,11 +77,9 @@ services:
       dockerfile: ./Dockerfile
     image: ticket-manager/web
     ports:
-      - "80:80"
-      - "81:443"
+      - "8082:80"
     depends_on:
       - web-api
-
 
 volumes:
   data:
