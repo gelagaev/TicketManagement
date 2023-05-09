@@ -6,10 +6,7 @@ import { Injectable } from '@angular/core';
 export class LocalStorageService {
   private ACCESS_TOKEN_KEY_NAME = "access-token";
 
-  constructor() {
-  }
-
-  setAuthToken(token: string): void {
+   setAuthToken(token: string): void {
     localStorage.setItem(this.ACCESS_TOKEN_KEY_NAME, token);
   }
 

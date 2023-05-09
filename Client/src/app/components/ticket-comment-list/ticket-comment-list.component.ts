@@ -42,9 +42,6 @@ export class TicketCommentListComponent {
     return comment.authorId === this.userId;
   }
 
-  constructor() {
-  }
-
   public trackByFn(index: number, {id}: CommentRecord): string {
     return id;
   }
