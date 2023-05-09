@@ -23,6 +23,7 @@ import { UntilDestroy } from "@ngneat/until-destroy";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { TicketCommentListPageComponent } from "../ticket-comment-list-page/ticket-comment-list-page.component";
+import { Edit } from "../../models/edit.model";
 
 @UntilDestroy()
 @Component({
@@ -60,13 +61,13 @@ export class TicketListItemComponent implements OnInit {
   createComment = new EventEmitter<ICreateCommentRequest>();
 
   @Output()
-  assignTicket = new EventEmitter<IAssignTicketRequest>();
+  assign = new EventEmitter<IAssignTicketRequest>();
 
   @Output()
-  closeTicket = new EventEmitter<ICloseTicketRequest>();
+  close = new EventEmitter<ICloseTicketRequest>();
 
   @Output()
-  editTicket = new EventEmitter<boolean>();
+  edit = new EventEmitter<Edit>();
 
   ngOnInit(): void {
     if (this.ticket.assignId) {
@@ -94,7 +95,10 @@ export class TicketListItemComponent implements OnInit {
   onEdit(): void {
     this.form.controls.subject.setValue(this.ticket.subject ?? "");
     this.form.controls.description.setValue(this.ticket.description ?? "");
-    this.editTicket.emit(true);
+    this.edit.emit({
+      ticketId: this.ticketId,
+      isEdit: true,
+    });
   }
 
   onDelete(): void {
@@ -110,7 +114,10 @@ export class TicketListItemComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.editTicket.emit(false);
+    this.edit.emit({
+      ticketId: this.ticketId,
+      isEdit: false,
+    });
   }
 
   onCreateComment(commentText: string) {
@@ -128,8 +135,8 @@ export class TicketListItemComponent implements OnInit {
     }
   }
 
-  onAssignManager(): void {
-    this.assignTicket.emit({
+  onAssign(): void {
+    this.assign.emit({
       managerId: this.selectedManagerId === '-1' ? undefined : this.selectedManagerId,
       ticketId: this.ticketId
     });
@@ -137,7 +144,7 @@ export class TicketListItemComponent implements OnInit {
 
   onClose(): void {
     if (window.confirm("Close ticket?")) {
-      this.closeTicket.emit({ticketId: this.ticketId})
+      this.close.emit({ticketId: this.ticketId})
     }
   }
 }

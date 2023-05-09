@@ -54,12 +54,6 @@ export class CommentEffects {
     }
   );
 
-  endEditingComment$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(CommentActions.updateTicketCommentSuccess),
-      exhaustMap((payload) => of(CommentActions.endEditTicketComment({commentId: payload.update.id.toString()})))
-    ));
-
   update$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CommentActions.updateTicketComment),

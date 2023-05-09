@@ -8,6 +8,7 @@ import {
 } from "../../services/web-api-service-proxies";
 import { BackendError } from "../../interceptors/http-request-failure.interceptor";
 import { Update } from "@ngrx/entity";
+import { Edit } from "../../models/edit.model";
 
 export const loadTickets = createAction('[Tickets] Load');
 export const loadTicketSuccess = createAction('[Tickets] Load success', props<{ tickets: TicketRecord[] }>());
@@ -32,3 +33,5 @@ export const assignTicketFailure = createAction('[Tickets] Assign Failure', prop
 export const closeTicket = createAction('[Tickets] Close', props<ICloseTicketRequest>());
 export const closeTicketSuccess = createAction('[Tickets] Close Success', props<{update: Update<TicketRecord>}>());
 export const closeTicketFailure = createAction('[Tickets] Close Failure', props<BackendError>());
+
+export const editTicket = createAction('[Ticket] Start End Edit Ticket Ticket', props<Edit>());

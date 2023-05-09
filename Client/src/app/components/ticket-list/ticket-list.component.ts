@@ -11,6 +11,7 @@ import {
 import { TicketListItemComponent } from "../ticket-list-item/ticket-list-item.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
+import { Edit } from "../../models/edit.model";
 
 @Component({
   selector: 'tm-ticket-list',
@@ -31,10 +32,10 @@ export class TicketListComponent {
   isAdmin = false;
 
   @Input({required: true})
-  isEdit = false;
+  users: UserRecord[] = [];
 
   @Input({required: true})
-  users: UserRecord[] = [];
+  editingTicketsIds: string[] = [];
 
   @Output()
   delete = new EventEmitter<string>();
@@ -46,17 +47,21 @@ export class TicketListComponent {
   createComment = new EventEmitter<ICreateCommentRequest>();
 
   @Output()
-  assignTicket = new EventEmitter<IAssignTicketRequest>();
+  assign = new EventEmitter<IAssignTicketRequest>();
 
   @Output()
-  closeTicket = new EventEmitter<ICloseTicketRequest>();
+  close = new EventEmitter<ICloseTicketRequest>();
 
   @Output()
-  editTicket = new EventEmitter<boolean>();
+  edit = new EventEmitter<Edit>();
 
   isAuthor(ticket: TicketRecord): boolean {
     return ticket.authorId === this.userId;
   };
+
+  isEditing(ticketId: string): boolean {
+    return this.editingTicketsIds.some(id => id === ticketId);
+  }
 
   public trackByFn(index: number, {id}: TicketRecord): string {
     return id;
@@ -74,15 +79,15 @@ export class TicketListComponent {
     this.createComment.emit(request);
   }
 
-  onAssignTicket(request: IAssignTicketRequest) {
-    this.assignTicket.emit(request);
+  onAssign(request: IAssignTicketRequest) {
+    this.assign.emit(request);
   }
 
-  onCloseTicket(request: ICloseTicketRequest) {
-    this.closeTicket.emit(request);
+  onClose(request: ICloseTicketRequest) {
+    this.close.emit(request);
   }
 
-  onEditTicket(isEdit: boolean) {
-    this.editTicket.emit(isEdit);
+  onEdit(isEdit: Edit) {
+    this.edit.emit(isEdit);
   }
 }

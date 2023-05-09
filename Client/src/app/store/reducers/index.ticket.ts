@@ -21,16 +21,6 @@ export const selectTicketTotal = createSelector(
   selectTicketState,
   fromTicket.selectTicketTotal
 );
-export const selectCurrentTicketId = createSelector(
-  selectTicketState,
-  fromTicket.getSelectedTicketId
-);
-
-export const selectCurrentTicket = createSelector(
-  selectTicketEntities,
-  selectCurrentTicketId,
-  (ticketEntities, ticketId) => ticketId && ticketEntities[ticketId]
-);
 
 export const isCurrentUserTicketAuthor = (ticketId: string) => createSelector(
   selectUserInfo,
@@ -44,3 +34,13 @@ export const selectCurrentUserId = createSelector(
 export const isCurrentUserAdmin = createSelector(
   selectUserInfo,
   (userInfo) => userInfo.isAdministrator);
+
+export const selectEditingTicketIds = createSelector(
+  selectTicketState,
+  fromTicket.getEditingTicketIds
+);
+
+export const isEditingTicket = (checkId: string) => createSelector(
+  selectEditingTicketIds,
+  selectEditingTicketIds => selectEditingTicketIds.some(id => id === checkId)
+);

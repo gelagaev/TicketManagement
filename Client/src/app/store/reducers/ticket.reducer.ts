@@ -4,13 +4,13 @@ import * as TicketActions from '../actions/ticket.actions';
 import { TicketRecord } from "../../services/web-api-service-proxies";
 
 export interface State extends EntityState<TicketRecord> {
-  selectedTicketId: string | null;
+  editingIds: string [];
 }
 
 export const adapter: EntityAdapter<TicketRecord> = createEntityAdapter<TicketRecord>();
 
 export const initialState: State = adapter.getInitialState({
-  selectedTicketId: null
+  editingIds: [],
 });
 
 export const ticketReducer = createReducer(
@@ -33,10 +33,20 @@ export const ticketReducer = createReducer(
   on(TicketActions.closeTicketSuccess, (state, {update}) => {
     return adapter.updateOne(update, state);
   }),
+  on(TicketActions.updateTicketSuccess, (state, response) => ({
+    ...state,
+    editingIds: [...state.editingIds.filter(id => id !== response.update.id)]
+  })),
+  on(TicketActions.editTicket, (state, edit) => ({
+    ...state,
+    editingIds:
+      edit.isEdit ?
+        [...state.editingIds, edit.ticketId] :
+        [...state.editingIds.filter(id => id !== edit.ticketId)]
+  })),
 );
 
-
-export const getSelectedTicketId = (state: State) => state.selectedTicketId;
+export const getEditingTicketIds = (state: State) => state.editingIds;
 
 const {
   selectIds,

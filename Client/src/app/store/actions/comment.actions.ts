@@ -24,8 +24,7 @@ export const createTicketComment = createAction('[Comments] Create Ticket Commen
 export const createTicketCommentSuccess = createAction('[Comments] Create Ticket Comment Success', props<CommentRecord>());
 export const createTicketCommentFailure = createAction('[Comment] Create Ticket Comment Failure', props<BackendError>());
 
-export const startEditTicketComment = createAction('[Comments] Start Edit Ticket Comment', props<{ commentId: string }>());
-export const endEditTicketComment = createAction('[Comments] End Edit Ticket Comment', props<{ commentId: string }>());
+export const editEditTicketComment = createAction('[Comments] Start Edit Ticket Comment', props<{ commentId: string }>());
 
 export const deleteTicketComment = createAction('[Comments] Delete Ticket Comment', props<{ commentId: string }>());
 export const deleteTicketCommentSuccess = createAction('[Comments] Delete Ticket Comment Success', props<{commentId: string}>());

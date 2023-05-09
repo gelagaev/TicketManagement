@@ -6,12 +6,12 @@
     [isAuthor]="isAuthor(ticket)"
     [isAdmin]="isAdmin"
     [users]="users"
-    [isEdit]="isEdit"
+    [isEdit]="isEditing(ticket.id)"
     (delete)="onDelete($event)"
     (save)="onSave($event)"
     (createComment)="onCreateComment($event)"
-    (assignTicket)="onAssignTicket($event)"
-    (closeTicket)="onCloseTicket($event)"
-    (editTicket)="onEditTicket($event)">
+    (assign)="onAssign($event)"
+    (close)="onClose($event)"
+    (edit)="onEdit($event)">
   </tm-ticket-list-item>
 </div>

@@ -11,11 +11,17 @@ import {
   TicketRecord,
   UserRecord
 } from "../../services/web-api-service-proxies";
-import { isCurrentUserAdmin, selectAllTickets, selectCurrentUserId } from "../../store/reducers/index.ticket";
-import { Observable, tap } from "rxjs";
+import {
+  isCurrentUserAdmin,
+  selectAllTickets,
+  selectCurrentUserId,
+  selectEditingTicketIds
+} from "../../store/reducers/index.ticket";
+import { Observable } from "rxjs";
 import { selectAllUsers } from "../../store/reducers/user.index";
-import { Actions, ofType } from "@ngrx/effects";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Actions } from "@ngrx/effects";
+import { UntilDestroy } from "@ngneat/until-destroy";
+import { Edit } from "../../models/edit.model";
 
 @UntilDestroy()
 @Component({
@@ -28,17 +34,11 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 })
 export class TicketListPageComponent {
   tickets$ = this.store.pipe(select(selectAllTickets));
-  isEdit = false;
+  editingTicketIds$ = this.store.pipe(select(selectEditingTicketIds));
 
   constructor(private store: Store<TicketRecord>, private actions$: Actions) {
     this.store.dispatch(TicketActions.loadTickets());
     this.store.dispatch(UserActions.getUsers());
-    this.actions$.pipe(
-      untilDestroyed(this),
-      ofType(TicketActions.updateTicketSuccess),
-      tap(() => {
-        this.isEdit = false;
-      })).subscribe();
   }
 
   get userId$(): Observable<string> {
@@ -69,15 +69,15 @@ export class TicketListPageComponent {
     );
   }
 
-  onAssignTicket(request: IAssignTicketRequest) {
+  onTicket(request: IAssignTicketRequest) {
     this.store.dispatch(TicketActions.assignTicket(request));
   }
 
-  onCloseTicket(request: ICloseTicketRequest) {
+  onClose(request: ICloseTicketRequest) {
     this.store.dispatch(TicketActions.closeTicket(request));
   }
 
-  onEditTicket(isEdit: boolean) {
-    this.isEdit = isEdit;
+  onEdit(edit: Edit) {
+    this.store.dispatch(TicketActions.editTicket(edit))
   }
 }
