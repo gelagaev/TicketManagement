@@ -1,10 +1,8 @@
 FROM node:16-alpine AS builder
 WORKDIR /app
-#COPY package.json .
 COPY . .
-RUN npm install --legacy-peer-deps
+RUN npm install
 RUN ./node_modules/.bin/ng build --configuration=production
-#RUN npm run build --outputPath=dist --configuration=prod
 
 FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html/*
