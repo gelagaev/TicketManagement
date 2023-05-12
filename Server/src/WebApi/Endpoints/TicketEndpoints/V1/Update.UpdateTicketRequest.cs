@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints.TicketEndpoints.V1;
 
