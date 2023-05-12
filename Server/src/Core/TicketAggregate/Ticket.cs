@@ -17,7 +17,7 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   public IEnumerable<Comment> Comments => _comments.AsReadOnly();
   public User Author { get; private set; } = default!;
   public Guid AuthorId { get; private set; }
-  public User? AssignedTo { get; private set; } = default!;
+  public User? AssignedTo { get; private set; }
   public Guid? AssignedId { get; private set; }
 
   public TicketStatus Status => IsDone ? TicketStatus.Complete : TicketStatus.InProgress;
@@ -31,15 +31,14 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
     Priority = priority;
     AuthorId = authorId;
   }
-  
+
   public void MarkComplete()
   {
-    if (!IsDone)
-    {
-      IsDone = true;
+    if (IsDone) return;
 
-      RegisterDomainEvent(new TicketCompletedEvent(this));
-    }
+    IsDone = true;
+
+    RegisterDomainEvent(new TicketCompletedEvent(this));
   }
 
   public void AddComment(Comment newComment)
@@ -55,7 +54,7 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   {
     Subject = Guard.Against.NullOrEmpty(newSubject, nameof(newSubject));
   }
-  
+
   public void UpdateDescription(string newDescription)
   {
     Description = Guard.Against.NullOrEmpty(newDescription, nameof(newDescription));
@@ -74,10 +73,5 @@ public class Ticket : EntityBase<Guid>, IAggregateRoot
   public bool IsAssignTo(User user)
   {
     return user.Id == AssignedId;
-  }
-
-  public void Close()
-  {
-    IsDone = true;
   }
 }

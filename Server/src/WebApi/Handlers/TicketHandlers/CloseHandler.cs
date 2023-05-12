@@ -18,7 +18,7 @@ internal sealed class CloseHandler : IRequestHandler<CloseTicketRequest, ActionR
     var existingTicket = await _repository.GetByIdAsync(request.TicketId, ct);
     Guard.Against.Null(existingTicket, nameof(existingTicket));
 
-    existingTicket.Close();
+    existingTicket.MarkComplete();
 
     await _repository.UpdateAsync(existingTicket, ct);
     return new OkResult();
