@@ -77,6 +77,9 @@ export class TicketListPageComponent {
   }
 
   onEdit(edit: Edit) {
-    this.store.dispatch(TicketActions.editTicket(edit))
+    const action = edit.isEdit ?
+      TicketActions.startEditTicket({ticketId: edit.id}) :
+      TicketActions.endEditTicket({ticketId: edit.id});
+    this.store.dispatch(action);
   }
 }

@@ -6,10 +6,8 @@ import {
 } from "../../services/web-api-service-proxies";
 import { BackendError } from "../../interceptors/http-request-failure.interceptor";
 import { Update } from "@ngrx/entity";
-import { Edit } from "../../models/edit.model";
 
 export let addTicketComment = undefined;
-
 
 export const loadTicketComment = createAction('[Comments] Load Ticket Comments', props<{ ticketId: string }>());
 export const loadTicketCommentsSuccess = createAction(
@@ -25,7 +23,8 @@ export const createTicketComment = createAction('[Comments] Create Ticket Commen
 export const createTicketCommentSuccess = createAction('[Comments] Create Ticket Comment Success', props<CommentRecord>());
 export const createTicketCommentFailure = createAction('[Comment] Create Ticket Comment Failure', props<BackendError>());
 
-export const editTicketComment = createAction('[Comments] Start Edit Ticket Comment', props<Edit>());
+export const startEditTicketComment = createAction('[Comments] Start Edit Ticket Comment', props<{commentId: string}>());
+export const endEditTicketComment = createAction('[Comments] End Edit Ticket Comment', props<{commentId: string}>());
 
 export const deleteTicketComment = createAction('[Comments] Delete Ticket Comment', props<{ commentId: string }>());
 export const deleteTicketCommentSuccess = createAction('[Comments] Delete Ticket Comment Success', props<{commentId: string}>());

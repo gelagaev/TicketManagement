@@ -50,8 +50,7 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.signInSuccess),
       filter(({success}) => !success),
-      tap(async ({token}) =>
-        this.snackBarService.showSignInFailure())
+      tap(async () => this.snackBarService.showSignInFailure())
     );
   }, {dispatch: false});
 

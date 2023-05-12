@@ -23,16 +23,18 @@ export const commentReducer = createReducer(
     adapter.addOne(ticket, state)),
   on(CommentActions.updateTicketCommentSuccess, (state, { update }) =>
     adapter.updateOne(update, state)),
-  on(CommentActions.editTicketComment, (state, edit) => ({
-    ...state,
-    editingIds: edit.isEdit ?
-      [...state.editingIds, edit.id] :
-      [...state.editingIds.filter(id => id !== edit.id)]
-  })),
   on(CommentActions.updateTicketCommentSuccess, (state, response) => ({
-      ...state,
-      editingIds: [...state.editingIds.filter(id => id !== response.update.id)]
-    })),
+    ...state,
+    editingIds: [...state.editingIds.filter(id => id !== response.update.id)]
+  })),
+  on(CommentActions.startEditTicketComment, (state, {commentId}) => ({
+    ...state,
+    editingIds: [...state.editingIds, commentId]
+  })),
+  on(CommentActions.endEditTicketComment, (state, {commentId}) => ({
+    ...state,
+    editingIds: [...state.editingIds.filter(id => id !== commentId)]
+  })),
 );
 
 export const getEditingCommentIds = (state: State) => state.editingIds;

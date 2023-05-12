@@ -38,7 +38,10 @@ export class TicketCommentListPageComponent implements OnInit {
   }
 
   onEdit(edit: Edit) {
-    this.store.dispatch(CommentActions.editTicketComment(edit))
+    const action = edit.isEdit ?
+      CommentActions.startEditTicketComment({commentId: edit.id}) :
+      CommentActions.endEditTicketComment({commentId: edit.id});
+    this.store.dispatch(action);
   }
 
   onDelete(commentId: string) {

@@ -37,12 +37,13 @@ export const ticketReducer = createReducer(
     ...state,
     editingIds: [...state.editingIds.filter(id => id !== response.update.id)]
   })),
-  on(TicketActions.editTicket, (state, edit) => ({
+  on(TicketActions.startEditTicket, (state, {ticketId}) => ({
     ...state,
-    editingIds:
-      edit.isEdit ?
-        [...state.editingIds, edit.id] :
-        [...state.editingIds.filter(id => id !== edit.id)]
+    editingIds: [...state.editingIds, ticketId]
+  })),
+  on(TicketActions.endEditTicket, (state, {ticketId}) => ({
+    ...state,
+    editingIds: [...state.editingIds.filter(id => id !== ticketId)]
   })),
 );
 
